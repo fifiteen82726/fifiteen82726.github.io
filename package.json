@@ -1,0 +1,31 @@
+{
+  "name": "appstrap",
+  "version": "3.0.5",
+  "description": "AppStrap Theme Bootstrap 4 theme",
+  "main": "index.htm",
+  "devDependencies": {
+    "gulp": "latest",
+    "jshint": "latest",
+    "gulp-util": "latest",
+    "gulp-notify": "latest",
+    "gulp-autoprefixer": "latest",
+    "gulp-cssmin": "latest",
+    "gulp-sass": "latest",
+    "gulp-uglify": "latest",
+    "gulp-concat": "latest",
+    "gulp-connect": "latest",
+    "gulp-rename": "latest",
+    "gulp-jshint": "latest",
+    "gulp-jsbeautifier": "latest",
+    "gulp-imagemin": "latest",
+    "gulp-bless": "latest",
+    "gulp-ignore": "latest",
+    "gulp-rtlcss": "latest"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Themelize.me Ltd",
+  "url": "http://themelize.me",
+  "copyright": "Copyright 2017 Themelize.me"
+}

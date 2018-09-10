@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>GitLever</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- @todo: fill with your company info or remove -->
+  <meta name="description" content="">
+  <meta name="author" content="Themelize.me">
+  <!-- Bootstrap v4.0.0-beta CSS via CDN -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+  <!-- Plugins required on all pages NOTE: Additional non-required plugins are loaded ondemand as of AppStrap 2.5 -->
+  <!-- Theme style -->
+  <link href="assets/css/theme-style.min.css" rel="stylesheet">
+  <!--Your custom colour override-->
+  <!-- <link href="#" id="colour-scheme" rel="stylesheet"> -->
+  <!-- Your custom override -->
+  <link href="assets/css/custom-style.css" rel="stylesheet">
+  <!-- Optional: ICON SETS -->
+  <!-- Iconset: Font Awesome 4.7.0 via CDN -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Iconset: flag icons - http://lipis.github.io/flag-icon-css/ -->
+  <link href="assets/plugins/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
+  <!-- Iconset: ionicons - http://ionicons.com/ -->
+  <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+  <!-- Iconset: Linearicons - https://linearicons.com/free -->
+  <link href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css" rel="stylesheet">
+  <!-- Le fav and touch icons - @todo: fill with your icons or remove -->
+  <link rel="shortcut icon" href="assets/assets/img/icons/favicon.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="assets/assets/img/icons/114x114.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="assets/assets/img/icons/72x72.png">
+  <link rel="apple-touch-icon" href="assets/assets/img/icons/default.png">
+  <!-- Google fonts -->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Rambla:400,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+  <!--Plugin: Retina.js (high def image replacement) - @see: http://retinajs.com/-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/retina.js/1.3.0/retina.min.js"></script>
+</head>
+<!-- ======== @Region: body ======== -->
+
+<body class="page page-onepager header-transparent header-ontop header-dark page-index-onepager-image navbar-layout-default">
+  <!-- @plugin: page loading indicator, delete to remove loader -->
+  <div class="page-loader" data-toggle="page-loader"></div>
+  <a href="#content" id="top" class="sr-only">Skip to content</a>
+  <!-- ======== @Region: #header ======== -->
+  <div id="header">
+    <div data-toggle="sticky">
+      <div class="header">
+        <div class="header-inner container">
+          <!--branding/logo -->
+          <div class="header-brand">
+            <a class="header-brand-text" href="index.html" title="Home">
+              <h1>
+                <span>Git</span>Lever<span></span>
+              </h1>
+            </a>
+            <div class="header-divider d-none d-lg-block"></div>
+            <div class="header-slogan d-none d-lg-block">DevToy</div>
+          </div>
+          <div class="navbar navbar-expand-md navbar-expand-collapse">
+            <!--everything within this div is collapsed on mobile-->
+            <div class="navbar-main collapse">
+              <!--main navigation-->
+              <ul class="nav navbar-nav navbar-inverse navbar-nav-onepager">
+                <li class="nav-item">
+                  <a href="#top" data-toggle="scroll-link" class="nav-link"> <i class="fa fa-home nav-link-icon"></i> <span class="d-none">Home</span> </a>
+                </li>
+                <li class="nav-item"> <a href="#about" data-toggle="scroll-link" class="nav-link"> About </a> </li>
+                <li class="nav-item"> <a href="#features" data-toggle="scroll-link" class="nav-link"> Features </a> </li>
+                <li class="nav-item"> <a href="#pricing" data-toggle="scroll-link" class="nav-link"> Pricing </a> </li>
+                <li class="nav-item"> <a href="#projects" data-toggle="scroll-link" class="nav-link"> Galary </a> </li>
+                <li class="nav-item"> <a href="#gitlever-members" data-toggle="scroll-link" class="nav-link"> Team </a> </li>
+               <!--  <li class="nav-item"> <a href="#contact" data-toggle="scroll-link" class="nav-link"> Contact </a> </li> -->
+              </ul>
+            </div>
+            <!--/.navbar-collapse -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ======== @Region: #highlighted ======== -->
+  <div id="highlighted">
+    <!-- Image Banner: Use the the data-bg-img functionality to create a simple image banner Use spacer classes to make the banner larger with padding, allows for easy responsive changes too see: elements-ctas.htm To make the banner full height add the attributes: data-toggle="full-height" data-offset="#header" -->
+    <div class="bg-white overlay overlay-op-6 text-center px-3 py-5 py-lg-10 flex-valign" data-bg-img="assets/img/backgrounds/man-with-open-arms-saluting-the-nature-picjumbo-com.jpg" data-css='{"background-position": "center bottom"}'>
+      <h2 class="display-4 text-white" data-animate="fadeIn" data-animate-delay="0.2">
+        Do everything via <span class="font-weight-bold">GitLever!</span>
+      </h2>
+      <h3 class="text-grey font-weight-normal" data-animate="fadeIn" data-animate-delay="0.35">
+        Comming soon on Kickstarter
+      </h3>
+      <hr class="hr-primary hr-lg w-20 mx-auto my-4" data-animate="fadeIn" data-animate-delay="0.45" />
+      <div> <a href="#about" class="btn btn-primary btn-rounded btn-lg py-lg-3 px-lg-5" data-toggle="scroll-link" data-animate="fadeIn" data-animate-delay="0.55">Find Out More</a>
+      </div>
+    </div>
+  </div>
+  <!-- ======== @Region: #content ======== -->
+  <div id="content" class="p-0">
+    <!-- About -->
+    <div id="about" class="py-3 pt-lg-6 pb-lg-0">
+      <div class="container">
+        <div data-animate="fadeIn" data-animate-duration="0.8">
+          <hr class="hr-lg mt-0 mb-3 w-10 mx-auto hr-primary" />
+          <h2 class="text-center text-uppercase font-weight-bold my-0">
+            We are <span class="text-shadow">GitLever</span>
+          </h2>
+          <h5 class="text-center font-weight-light mt-2 mb-0 text-muted">
+            Develop much fun
+          </h5>
+          <hr class="mb-5 w-50 mx-auto" />
+        </div>
+        <div class="row">
+          <div class="col-md-6" data-animate="fadeIn" data-animate-delay="0.4" data-animate-offset="100%">
+            <p class="lead">GitLever is a Dev Toy brings creativity and fun to the world.</p>
+            <p>A tool developers make everything fun via a simple Push and Pull gestures. </p>
+            <p class="mb-0">Developers can utilize custom configuration to adjust their own setting and make everything come true!</p>
+          </div>
+          <div class="col-md-6" data-animate="fadeIn" data-animate-delay="0.8" data-animate-offset="100%">
+            <!-- List Items -->
+            <ul class="fa-ul list-unstyled mt-4 mt-md-0">
+              <li class="mb-4">
+                <i class="fa-li fa fa-check text-primary"></i>
+                <h4 class="mb-1">
+                  Creative and Fun
+                </h4>
+                Can be self-deployment settings
+              </li>
+              <li class="mb-3">
+                <i class="fa-li fa fa-check text-primary"></i>
+                <h4 class="mb-1">
+                  Useful and Productive
+                </h4>
+                No longer need to type complex command
+              </li>
+              <li>
+                <i class="fa-li fa fa-check text-primary"></i>
+                <h4 class="mb-1">
+                  Easy to be munipulated
+                </h4>
+                Just Push and Pull
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Why AppStrap -->
+      <div class="bg-inverse mt-3 mt-lg-6">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-5 divider-diagonal divider-diagonal-r divider-dark" data-bg-img="assets/img/backgrounds/computer-screens.jpg" data-animate="fadeIn" data-animate-delay="0.1"></div>
+            <div class="col-lg-4 py-5" data-animate="fadeIn" data-animate-delay="0.3">
+              <hr class="hr-lg mt-0 mb-2 w-10 ml-0 hr-primary" />
+              <h2 class="display-4 text-slab text-white text-uppercase mt-0 mb-5">
+                Use <span class="text-primary font-weight-bold">GitLever</span>
+              </h2>
+              <div class="row mb-3">
+                <div class="col-2 col-md-1 text-center"> <i class="fa fa-check text-primary icon-2x"></i>
+                </div>
+                <div class="col-10 col-md-11 text-grey">
+                  <h4 class="font-weight-bold text-white text-uppercase">
+                    Fully Optimized
+                  </h4>
+                  <p>We use the most stable Arduino device
+Support for all popular platforms include OSX, Windows, and Linux Ubuntu.</p>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-2 col-md-1 text-center"> <i class="fa fa-check text-primary icon-2x"></i>
+                </div>
+                <div class="col-10 col-md-11 text-grey">
+                  <h4 class="font-weight-bold text-white text-uppercase">
+                    Free Upgrades
+                  </h4>
+                  <p>GitLever will be continuously updated to the end of the world
+buyer will be added to a github repo and enjoy life-long software updates.</p>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-2 col-md-1 text-center"> <i class="fa fa-check text-primary icon-2x"></i>
+                </div>
+                <div class="col-10 col-md-11 text-grey">
+                  <h4 class="font-weight-bold text-white text-uppercase">
+                    GitLever Care
+                  </h4>
+                  <p>Each product has a 2 year warranty of hardware coverage and permanent technical support.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Features -->
+      <div id="features" class="container py-4 py-lg-6">
+        <div data-animate="fadeIn" data-animate-duration="0.6">
+          <hr class="hr-lg mt-0 mb-3 w-10 mx-auto hr-primary" />
+          <h2 class="text-center text-uppercase font-weight-bold my-0">
+            Core Features
+          </h2>
+          <h5 class="text-center font-weight-light mt-2 mb-0 text-muted">
+            Great features, great product!
+          </h5>
+          <hr class="mb-5 w-50 mx-auto" />
+        </div>
+        <div class="row text-center">
+          <div class="col-lg-4 py-2" data-animate="fadeIn" data-animate-delay="0.1">
+            <i class="fa fa-tachometer icon-5x text-primary"></i>
+            <h4 class="mt-2">
+              Productive
+            </h4>
+            <p>A real tool developers can use it to replace complex command.</p>
+          </div>
+          <div class="col-lg-4 py-2" data-animate="fadeIn" data-animate-delay="0.2">
+            <i class="fa fa-wrench icon-5x text-primary"></i>
+            <h4 class="mt-2">
+              Free Support
+            </h4>
+            <p>Each product has permanent technical support.</p>
+          </div>
+          <div class="col-lg-4 py-2" data-animate="fadeIn" data-animate-delay="0.3">
+            <i class="fa fa-rocket icon-5x text-primary"></i>
+            <h4 class="mt-2">
+              Free Upgrades
+            </h4>
+            <p>Buyer will joins our private Github repo of GitLever and enjoy life-long software updates.</p>
+          </div>
+          <div class="col-lg-4 py-2" data-animate="fadeIn" data-animate-delay="0.4">
+            <i class="fa fa-line-chart icon-5x text-primary"></i>
+            <h4 class="mt-2">
+              99.9% Uptime
+            </h4>
+            <p>The product is tested for continuous availability.</p>
+          </div>
+          <div class="col-lg-4 py-2" data-animate="fadeIn" data-animate-delay="0.5">
+            <i class="fa fa-smile-o icon-5x text-primary"></i>
+            <h4 class="mt-2">
+              Harmonious
+            </h4>
+            <p>Developers will enjoy the ease of development that has not existed in the past.</p>
+          </div>
+          <div class="col-lg-4 py-2" data-animate="fadeIn" data-animate-delay="0.6">
+            <i class="fa fa-plug icon-5x text-primary"></i>
+            <h4 class="mt-2">
+              Safe
+            </h4>
+            <p>Powered by PC only, no battery added, PSE certified.</p>
+          </div>
+        </div>
+      </div>
+      <!--Pricing Table-->
+      <div id="pricing" class="bg-faded py-3 py-lg-6">
+        <div class="container">
+          <div data-animate="fadeIn" data-animate-duration="0.6">
+            <hr class="hr-lg mt-0 mb-3 w-10 mx-auto hr-primary" />
+            <h2 class="text-center text-uppercase font-weight-bold my-0">
+              Pricing Plans
+            </h2>
+            <h5 class="text-center font-weight-light mt-2 mb-0 text-muted">
+              Competitive pricing plans to suit your needs
+            </h5>
+            <hr class="mb-5 w-50 mx-auto" />
+          </div>
+          <div class="row pricing-stack">
+            <div class="col-md-4" data-animate="fadeIn" data-animate-delay="0.2">
+              <div class="card bg-shadow text-center rounded">
+                <h3 class="card-title py-3 text-shadow">
+                  Promoter
+                </h3>
+                <p class="price-banner border-grey card-body-overlap"> <span class="text-fancy price-digits">Free!</span>
+                </p>
+                <div class="card-body">
+                  <ul class="list-unstyled list-border-dots">
+                    <li>Enjoy a free maker edition gitlever</li>
+                    <li>Help us promote</li>
+                    <li>Limited supply</li>
+                    <li>Limited support</li>
+                  </ul>
+                  <button disabled class="btn btn-primary btn-block btn-rounded">Comming Soon</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4" data-animate="fadeIn" data-animate-delay="0.4">
+              <div class="card bg-white bg-shadow text-center card-outline-primary">
+                <div class="card-ribbon card-ribbon-top card-ribbon-left bg-primary text-white">Popular</div>
+                <h3 class="card-title py-3 text-shadow">
+                  <span class="em">Maker</span> <span class="text-fancy">Edition</span>
+                </h3>
+                <p class="price-banner bg-primary text-white border-primary card-body-overlap">
+                  <span class="price-currency">$</span>
+                  <span class="price-digits">34<span>.95</span></span>
+                </p>
+                <div class="card-body">
+                  <ul class="list-unstyled list-border-dots">
+                    <li>High quality wooden board</li>
+                    <li>Self-assembly</li>
+                    <li>2 years hardware coverage</li>
+                    <li>Umlimited Technical Support</li>
+                  </ul>
+                  <button disabled class="btn btn-primary btn-block btn-rounded">Comming Soon</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4" data-animate="fadeIn" data-animate-delay="0.3">
+              <div class="card bg-white bg-shadow text-center card-outline-primary">
+                <h3 class="card-title py-3 text-shadow">
+                  <span class="em">Pro</span> <span class="text-fancy">Edition</span>
+                </h3>
+                <p class="price-banner bg-primary text-white border-primary card-body-overlap">
+                  <span class="price-currency">$</span>
+                  <span class="price-digits">99<span>.95</span></span>
+                </p>
+                <div class="card-body">
+                  <ul class="list-unstyled list-border-dots">
+                    <li>The highest quality metal appearance</li>
+                    <li>One piece</li>
+                    <li>Free shipping worldwide</li>
+                    <li>Umlimited comprehensive Support</li>
+                  </ul>
+                 <button disabled class="btn btn-primary btn-block btn-rounded">Comming Soon</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Plan features -->
+          <div class="bg-grey bg-shadow py-3 mt-4 text-center" data-animate="fadeInUp" data-animate-duration="1.2" data-animate-offset="100%">
+            <h4 class="d-inline-block pr-1 my-0">
+              <span>All Plans <span class="font-weight-normal text-muted">Enjoy</span></span>
+            </h4>
+            <p class="d-inline-block text-muted my-0"> continuous permanent software updates</p>
+          </div>
+        </div>
+      </div>
+      <!--Projects carousel -->
+      <div id="projects" class="container p-3 py-lg-6" data-toggle="magnific-popup" data-magnific-popup-settings='{"delegate": "a.project", "gallery":{"enabled":true}}'>
+        <div data-animate="fadeIn" data-animate-duration="0.6">
+          <hr class="hr-lg mt-0 mb-3 w-10 mx-auto hr-primary" />
+          <h2 class="text-center text-uppercase font-weight-bold my-0">
+            Galary
+          </h2>
+          <h5 class="text-center font-weight-light mt-2 mb-0 text-muted">
+            See what we've been working on!
+          </h5>
+          <hr class="mb-5 w-50 mx-auto" />
+        </div>
+        <div class="mt-4 owl-nav-over owl-nav-over-lg owl-dots-center" data-toggle="owl-carousel" data-owl-carousel-settings='{"responsive":{"0":{"items":1, "nav":false, "dots":true}, "600":{"items":2, "dots":true}, "940":{"items":3, "nav":true, "dots":true}}, "margin":1, "nav":true, "dots":false}'>
+          <!--Project item 1-->
+          <a href="assets/img/gitlever/1.jpg" class="project overlay-hover">
+            <img src="assets/img/gitlever/1.jpg" alt="Project 1" class="img-fluid" />
+            <span class="overlay-hover-content">
+              <i class="fa fa-arrow-circle-right icon-3x text-white"></i>
+              <h5 class="mt-4">
+                Click to view
+              </h5>
+            </span>
+          </a>
+          <!--Project item 2-->
+          <a href="assets/img/gitlever/2.jpg" class="project overlay-hover">
+            <img src="assets/img/gitlever/2.jpg" alt="Project 2" class="img-fluid" />
+            <span class="overlay-hover-content">
+              <i class="fa fa-arrow-circle-right icon-3x text-white"></i>
+              <h5 class="mt-4">
+                Click to view
+              </h5>
+            </span>
+          </a>
+          <!--Project item 3-->
+          <a href="assets/img/gitlever/3.jpg" class="project overlay-hover">
+            <img src="assets/img/gitlever/3.jpg" alt="Project 3" class="img-fluid" />
+            <span class="overlay-hover-content">
+              <i class="fa fa-arrow-circle-right icon-3x text-white"></i>
+              <h5 class="mt-4">
+                Click to view
+              </h5>
+            </span>
+          </a>
+          <!--Project item 4-->
+          <a href="assets/img/gitlever/4.jpg" class="project overlay-hover">
+            <img src="assets/img/gitlever/4.jpg" alt="Project 4" class="img-fluid" />
+            <span class="overlay-hover-content">
+              <i class="fa fa-arrow-circle-right icon-3x text-white"></i>
+              <h5 class="mt-4">
+                Click to view
+              </h5>
+            </span>
+          </a>
+          <!--Project item 5-->
+          <a href="assets/img/gitlever/5.jpg" class="project overlay-hover">
+            <img src="assets/img/gitlever/5.jpg" alt="Project 5" class="img-fluid" />
+            <span class="overlay-hover-content">
+              <i class="fa fa-arrow-circle-right icon-3x text-white"></i>
+              <h5 class="mt-4">
+                Click to view
+              </h5>
+            </span>
+          </a>
+          <!--Project item 6-->
+        </div>
+      </div>
+      <!--Customer testimonial-->
+      <div id="testimonials" class="p-3 py-lg-6 bg-inverse">
+        <div class="container">
+          <div data-animate="fadeIn" data-animate-duration="0.6">
+            <hr class="hr-lg mt-0 mb-3 w-10 mx-auto hr-primary" />
+            <h2 class="text-white text-center text-uppercase font-weight-bold my-0">
+              Highly Recommended
+            </h2>
+            <h5 class="text-center font-weight-light mt-2 mb-0 text-grey">
+              99% of our customers recommend us!
+            </h5>
+            <hr class="mb-5 w-50 mx-auto" />
+          </div>
+          <div class="row">
+            <div class="col-md-4 d-md-flex">
+              <blockquote class="blockquote-bubble text-center" data-animate="fadeIn" data-animate-delay="0.1">
+                <p class="blockquote-bubble-content bg-white">"It's totally awesome, I couldn't imagine life without it!"</p>
+                <small class="text-grey">
+                  <img src="assets/img/github-p/nicole.png" alt="nicole" class="rounded-circle mr-2" />
+                  Nicole Ku <span class="text-primary font-weight-bold">/</span> <a href="https://github.com/vnicolev">@vnicolev</a>
+                </small>
+              </blockquote>
+            </div>
+            <div class="col-md-4 d-md-flex">
+              <blockquote class="blockquote-bubble text-center" data-animate="fadeIn" data-animate-delay="0.2">
+                <p class="blockquote-bubble-content bg-white text-center">"10 out of 10, highly recommended!"</p>
+                <small class="text-grey">
+                  <img src="assets/img/github-p/wolf.jpg" alt="Rumble" class="rounded-circle mr-2" />
+                  Rumble Huang <span class="text-primary font-weight-bold">/</span> <a href="https://github.com/khiav223577">Open source contributor</a>
+                </small>
+              </blockquote>
+            </div>
+            <div class="col-md-4 d-md-flex">
+              <blockquote class="blockquote-bubble text-center" data-animate="fadeIn" data-animate-delay="0.3">
+                <p class="blockquote-bubble-content bg-white text-center">"Our productivity & sales are up! Couldn't be happier with gitlever!"</p>
+                <small class="text-grey">
+                  <img src="assets/img/github-p/jeff.jpg" alt="Jeff" class="rounded-circle mr-2" />
+                  Jeff Yeh <span class="text-primary font-weight-bold">/</span> <a href="#">Scrum Master at PaGamO</a>
+                </small>
+              </blockquote>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Members -->
+      <div id="testimonials" class="p-3 py-lg-6">
+        <div data-animate="fadeIn" data-animate-duration="0.6">
+        <hr class="hr-lg mt-0 mb-3 w-10 mx-auto hr-primary" id="gitlever-members">
+        <h2 class="text-center text-uppercase font-weight-bold my-0">
+          Team
+        </h2>
+        <hr class="mb-5 w-50 mx-auto" />
+        </div>
+        <div class="col-md-12" id="gitlever-members">
+        <!-- The team -->
+        <div class="team team-grid mt-4 member-profile-grid">
+          <div class="row" data-toggle="isotope-grid" data-isotope-options='{"layoutMode": "fitRows", "itemSelector": ".grid-item"}'>
+            <!--Team Member jimi-->
+            <div class="col-6 col-sm-4 col-md-3 grid-item">
+              <div class="team-member">
+                <a href="https://github.com/Ansaga" title="View Ansaga's profile">
+                  <img src="assets/img/github-p/ansaga.jpeg" class="img-thumbnail" alt="Ansaga" />
+                </a>
+                <h5 class="name">
+                  <a href="https://github.com/Ansaga" title="View Ansaga's profile">Ansaga</a>
+                </h5>
+                <p class="role">Founder & CTO</p>
+                <div class="social-media-branding social-media-branding-xs">
+                  <a href="https://github.com/Ansaga" class="social-link branding-twitter"><i class="fa fa-github-square"></i></a>
+                </div>
+              </div>
+            </div>
+            <!--Team Member bono-->
+            <div class="col-6 col-sm-4 col-md-3 grid-item">
+              <div class="team-member">
+                <a href="https://www.manjulee.net/" title="View Mel's profile">
+                  <img src="assets/img/github-p/mel.jpg" class="img-thumbnail" alt="Mel" />
+                </a>
+                <h5 class="name">
+                  <a href="https://www.manjulee.net/" title="View Mel's profile">Mel Lee</a>
+                </h5>
+                <p class="role">Chief Design Officer</p>
+                <div class="social-media-branding social-media-branding-xs">
+                  <!--@todo: replace with real social share links -->
+                  <a href="https://www.manjulee.net/" class="social-link branding-twitter"><i class="fa fa-home"></i></a>
+                  <a href="https://www.behance.net/woodsvendor" class="social-link branding-facebook"><i class="fa fa-behance-square"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3 grid-item">
+              <div class="team-member">
+                <a href="https://github.com/fifiteen82726" title="View Coda's profile">
+                  <img src="assets/img/github-p/coda.jpeg" class="img-thumbnail" alt="Coda" />
+                </a>
+                <h5 class="name">
+                  <a href="https://github.com/fifiteen82726" title="View Coda's profile">Chen I Chang(Coda)</a>
+                </h5>
+                <p class="role">Founder & Software Team Leader</p>
+                <div class="social-media-branding social-media-branding-xs">
+                  <!--@todo: replace with real social share links -->
+                  <a href="https://github.com/fifiteen82726" class="social-link branding-twitter">
+                    <i class="fa fa-github-square"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3 grid-item">
+              <div class="team-member">
+                <a href="https://github.com/DaMinaup6" title="View Damin's profile">
+                  <img src="assets/img/github-p/damin.jpeg" class="img-thumbnail" alt="Damin" />
+                </a>
+                <h5 class="name">
+                  <a href="https://github.com/DaMinaup6" title="View Damin's profile">Da-Min</a>
+                </h5>
+                <p class="role">Software Developer</p>
+                <div class="social-media-branding social-media-branding-xs">
+                  <!--@todo: replace with real social share links -->
+                  <a href="https://github.com/DaMinaup6" class="social-link branding-twitter">
+                    <i class="fa fa-github-square"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3 grid-item">
+              <div class="team-member">
+                <a href="https://github.com/DingChiLin" title="View DingChiLin's profile">
+                  <img src="assets/img/github-p/dingchilin.png" class="img-thumbnail" alt="DingChiLin" />
+                </a>
+                <h5 class="name">
+                  <a href="https://github.com/DingChiLin" title="View DingChi's profile">Ding Chi Lin(Arthur)</a>
+                </h5>
+                <p class="role">Software Developer</p>
+                <div class="social-media-branding social-media-branding-xs">
+                  <!--@todo: replace with real social share links -->
+                  <a href="https://github.com/DingChiLin" class="social-link branding-twitter">
+                    <i class="fa fa-github-square"></i></a>
+                </div>
+              </div>
+            </div>
+
+             <div class="col-6 col-sm-4 col-md-3 grid-item">
+              <div class="team-member">
+                <a href="https://github.com/HEROGWP" title="View Peter's profile">
+                  <img src="assets/img/github-p/peter.jpeg" class="img-thumbnail" alt="Peter" />
+                </a>
+                <h5 class="name">
+                  <a href="https://github.com/HEROGWP" title="View Peter's profile">Peter</a>
+                </h5>
+                <p class="role">Software Developer</p>
+                <div class="social-media-branding social-media-branding-xs">
+                  <!--@todo: replace with real social share links -->
+                  <a href="https://github.com/HEROGWP" class="social-link branding-twitter">
+                    <i class="fa fa-github-square"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3 grid-item">
+              <div class="team-member">
+                <a href="https://github.com/DerekNien" title="View Derek's profile">
+                  <img src="assets/img/github-p/derek.jpeg" class="img-thumbnail" alt="DerekNien" />
+                </a>
+                <h5 class="name">
+                  <a href="https://github.com/DerekNien" title="View Derek's profile">Derek Nien</a>
+                </h5>
+                <p class="role">Software Developer / IC Designer</p>
+                <div class="social-media-branding social-media-branding-xs">
+                  <!--@todo: replace with real social share links -->
+                  <a href="https://github.com/DerekNien" class="social-link branding-twitter">
+                    <i class="fa fa-github-square"></i></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 col-sm-4 col-md-3 grid-item">
+              <div class="team-member">
+                <a href="https://github.com/Johnnychien199108" title="View Johnny's profile">
+                  <img src="assets/img/github-p/johnny.png" class="img-thumbnail" alt="Johnny" />
+                </a>
+                <h5 class="name">
+                  <a href="https://github.com/Johnnychien199108" title="View Johnny's profile">Johnny Chien</a>
+                </h5>
+                <p class="role">IC Designer / Data Scientist</p>
+                <div class="social-media-branding social-media-branding-xs">
+                  <!--@todo: replace with real social share links -->
+                  <a href="https://github.com/Johnnychien199108" class="social-link branding-twitter">
+                    <i class="fa fa-github-square"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Customer testimonial-->
+      </div>
+    </div>
+    <!-- ======== @Region: #footer ======== -->
+    <footer id="footer" class="py-3">
+      <div class="container">
+        <div class="row">
+          <!--@todo: replace with company copyright details-->
+          <div class="col-md-6">
+            <p class="mb-0 text-sm">Copyright 2017 &copy; GitLever</p>
+          </div>
+          <div class="col-md-6 flex-valign">
+            <div class="float-md-right ml-md-auto">
+              <!--@todo: replace with company social media details-->
+              <!-- <a href="#" class="btn btn-sm btn-icon btn-inverse btn-rounded"><i class="fa fa-twitter"></i></a> -->
+              <a href="https://www.facebook.com/GitLever/" class="btn btn-sm btn-icon btn-inverse btn-rounded"><i class="fa fa-facebook"></i></a>
+              <a href="#top" class="btn btn-sm btn-icon btn-inverse btn-rounded" title="Back to top"><i class="fa fa-chevron-up"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!--jQuery 3.2.1 via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Popper 1.9.3 via CDN, needed for Bootstrap Tooltips & Popovers -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.9.3/umd/popper.min.js"></script>
+    <!-- Bootstrap v4.0.0-beta JS via CDN -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <!-- JS plugins required on all pages NOTE: Additional non-required plugins are loaded ondemand as of AppStrap 2.5 To disable this and load plugin assets manually simple add data-plugins-manual=true to the body tag -->
+    <!--Custom scripts & AppStrap API integration -->
+    <script src="assets/js/custom-script.js"></script>
+    <!--AppStrap scripts mainly used to trigger libraries/plugins -->
+    <script src="assets/js/script.min.js"></script>
+  </body>
+
+  </html>
