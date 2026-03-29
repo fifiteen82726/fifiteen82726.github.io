@@ -133,12 +133,30 @@
       min-width: 1210px;
     }
 
+    .weekday-head {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #eef3fb;
+      color: #274b73;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 7px 6px;
+    }
+
     .day {
       border: 1px solid var(--line);
       border-radius: 12px;
       background: #fff;
       min-height: 190px;
       padding: 9px;
+    }
+
+    .day.placeholder {
+      min-height: 40px;
+      background: transparent;
+      border: 1px dashed #d9dfeb;
+      opacity: 0.7;
     }
 
     .dow {
@@ -426,7 +444,7 @@
       "Boston (Foxborough)"
     ]);
     const dallasGround = "Dallas (Arlington)";
-    const weekDays = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
+    const weekDaysMonFirst = ["週一", "週二", "週三", "週四", "週五", "週六", "週日"];
 
     const state = {
       scope: "all",
@@ -584,6 +602,22 @@
       const min = toDateObj(allDates[0]);
       const max = toDateObj(allDates[allDates.length - 1]);
 
+      // Header row fixed to Monday -> Sunday order
+      weekDaysMonFirst.forEach((name) => {
+        const h = document.createElement("div");
+        h.className = "weekday-head";
+        h.textContent = name;
+        grid.appendChild(h);
+      });
+
+      // Pad first week so columns always start from Monday
+      const firstCol = (min.getDay() + 6) % 7; // Mon=0 ... Sun=6
+      for (let i = 0; i < firstCol; i += 1) {
+        const p = document.createElement("article");
+        p.className = "day placeholder";
+        grid.appendChild(p);
+      }
+
       for (let d = new Date(min); d <= max; d.setDate(d.getDate() + 1)) {
         const dateStr = formatDate(d);
         const events = sorted(byDate.get(dateStr) || []);
@@ -597,9 +631,10 @@
         }).join("");
 
         const more = events.length > 2 ? `<div class="more">+ 還有 ${events.length - 2} 場</div>` : "";
+        const dowLabel = weekDaysMonFirst[(d.getDay() + 6) % 7];
 
         card.innerHTML = `
-          <p class="dow">${weekDays[d.getDay()]}</p>
+          <p class="dow">${dowLabel}</p>
           <p class="date">${dateStr}</p>
           <p class="count">${events.length} 場</p>
           ${events.length ? mini + more : '<div class="empty">無符合範圍場次</div>'}
