@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 世界盃 | 全賽程行事曆</title>
+  <style>
+    :root {
+      --bg: #f3efe5;
+      --ink: #0f2236;
+      --muted: #637182;
+      --card: #ffffff;
+      --line: #d7d1c2;
+      --hero: #112746;
+      --nearby-bg: #d9f1e6;
+      --nearby-fg: #0e6245;
+      --dallas-bg: #e3edff;
+      --dallas-fg: #1f4d88;
+      --far-bg: #f6e9d1;
+      --far-fg: #7e531a;
+      --bracket-bg: #f8fbff;
+      --bracket-line: #c4d7f7;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "PingFang TC", "Noto Sans TC", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 90% 8%, #ffdcae 0%, transparent 33%),
+        radial-gradient(circle at 8% 92%, #d9e7ff 0%, transparent 34%),
+        var(--bg);
+    }
+
+    .wrap {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 20px 16px 30px;
+    }
+
+    .hero {
+      background: var(--hero);
+      color: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 1.45rem;
+      letter-spacing: 0.2px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: #d7e2ee;
+      line-height: 1.5;
+      font-size: 0.94rem;
+    }
+
+    .toolbar {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toolbar label {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .toolbar select {
+      border: 1px solid #405a77;
+      border-radius: 999px;
+      background: #0f1f33;
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+    }
+
+    .toolbar select:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .meta {
+      margin-top: 8px;
+      color: #d4dfed;
+      font-size: 0.87rem;
+    }
+
+    .pane {
+      margin-top: 16px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(15, 34, 54, 0.06);
+      overflow: hidden;
+    }
+
+    .pane-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff9ee 0%, #fff 100%);
+    }
+
+    .pane-head h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .pane-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .calendar-scroll {
+      overflow: auto;
+      max-height: calc(100vh - 220px);
+      padding: 12px;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(170px, 1fr));
+      gap: 10px;
+      min-width: 1210px;
+    }
+
+    .day {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      min-height: 190px;
+      padding: 9px;
+    }
+
+    .dow {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .date {
+      margin: 4px 0 2px;
+      font-size: 0.98rem;
+      font-weight: 800;
+    }
+
+    .count {
+      margin: 0 0 8px;
+      font-size: 0.76rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 6px;
+      margin-bottom: 6px;
+      font-size: 0.77rem;
+      line-height: 1.35;
+      background: #fff;
+    }
+
+    .mini .m-time { color: var(--muted); font-weight: 700; }
+    .mini .m-match { font-weight: 800; margin: 2px 0; }
+    .mini .m-ground { color: #2f4255; }
+
+    .more {
+      font-size: 0.75rem;
+      color: #1d4f8d;
+      font-weight: 700;
+    }
+
+    .empty {
+      border: 1px dashed var(--line);
+      border-radius: 9px;
+      padding: 8px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .badge {
+      margin-top: 6px;
+      display: inline-block;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.71rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .nearby { background: var(--nearby-bg); color: var(--nearby-fg); border-color: #b6e0ce; }
+    .dallas { background: var(--dallas-bg); color: var(--dallas-fg); border-color: #bfd3fa; }
+    .far { background: var(--far-bg); color: var(--far-fg); border-color: #e5cfa9; }
+
+    .bracket-wrap {
+      margin-top: 18px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(15, 34, 54, 0.06);
+      overflow: hidden;
+    }
+
+    .bracket-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #f2f7ff 0%, #fff 100%);
+    }
+
+    .bracket-head h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .bracket-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .bracket-scroll {
+      overflow: auto;
+      padding: 12px;
+      background: var(--bracket-bg);
+    }
+
+    .bracket {
+      min-width: 1120px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(210px, 1fr));
+      gap: 10px;
+    }
+
+    .bracket.full {
+      min-width: 1320px;
+      grid-template-columns: repeat(6, minmax(210px, 1fr));
+    }
+
+    .round-col {
+      border: 1px solid var(--bracket-line);
+      border-radius: 12px;
+      background: #fff;
+      padding: 8px;
+    }
+
+    .round-title {
+      margin: 0 0 8px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #264a74;
+    }
+
+    .match-card {
+      border: 1px solid #d7dfec;
+      border-radius: 8px;
+      padding: 7px;
+      margin-bottom: 7px;
+      background: #fff;
+      font-size: 0.77rem;
+      line-height: 1.3;
+    }
+
+    .match-card:last-child { margin-bottom: 0; }
+    .match-card .mc-time { color: var(--muted); font-weight: 700; }
+    .match-card .mc-teams { font-weight: 800; margin: 2px 0; font-size: 0.82rem; }
+    .match-card .mc-ground { color: #35516d; }
+
+    .groups-wrap {
+      margin-top: 18px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(15, 34, 54, 0.06);
+      overflow: hidden;
+    }
+
+    .groups-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #f8f7ff 0%, #fff 100%);
+    }
+
+    .groups-head h2 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .groups-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .groups-body {
+      padding: 12px;
+    }
+
+    .groups-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(230px, 1fr));
+      gap: 10px;
+    }
+
+    .group-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fff;
+    }
+
+    .group-title {
+      margin: 0 0 8px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      color: #28486d;
+    }
+
+    .team-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 6px;
+      font-size: 0.83rem;
+    }
+
+    .team-row:last-child { margin-bottom: 0; }
+
+    .flag {
+      width: 1.3rem;
+      text-align: center;
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    @media (max-width: 1100px) {
+      .calendar-scroll { max-height: none; }
+      .groups-grid { grid-template-columns: repeat(2, minmax(230px, 1fr)); }
+    }
+
+    @media (max-width: 650px) {
+      .groups-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>2026 世界盃全賽程行事曆（全部場次）</h1>
+      <p>可用城市與國家篩選。若選了國家，可再指定「小組第一 / 第二晉級」，下方會只顯示該路線到冠軍賽。</p>
+      <div class="toolbar">
+        <label for="scope">顯示範圍</label>
+        <select id="scope" aria-label="顯示範圍">
+          <option value="all">全部場次</option>
+          <option value="ny">只看 NY 周邊</option>
+          <option value="ny+dallas">NY 周邊 + Dallas</option>
+        </select>
+
+        <label for="country">國家</label>
+        <select id="country" aria-label="國家選擇">
+          <option value="all">全部國家</option>
+        </select>
+
+        <label for="advance">晉級情境</label>
+        <select id="advance" aria-label="晉級情境" disabled>
+          <option value="none">不推演淘汰賽</option>
+          <option value="1">小組第一晉級</option>
+          <option value="2">小組第二晉級</option>
+        </select>
+      </div>
+      <div class="meta" id="meta"></div>
+    </section>
+
+    <section class="pane" id="calendar-pane">
+      <header class="pane-head">
+        <h2>賽程行事曆</h2>
+        <p>依日期排列；若有指定國家與晉級情境，會加上該隊淘汰賽推演場次。</p>
+      </header>
+      <div class="calendar-scroll">
+        <div class="calendar-grid" id="calendar-grid"></div>
+      </div>
+    </section>
+
+    <section class="bracket-wrap" id="bracket-wrap">
+      <header class="bracket-head">
+        <h2 id="bracket-title">32 強到冠軍賽對戰圖</h2>
+        <p id="bracket-subtitle">顯示：32 強 → 16 強 → 8 強 → 4 強 → 冠軍賽（含季軍賽）。</p>
+      </header>
+      <div class="bracket-scroll">
+        <div class="bracket" id="bracket"></div>
+      </div>
+    </section>
+
+    <section class="groups-wrap" id="groups-wrap">
+      <header class="groups-head">
+        <h2>各小組國家</h2>
+        <p>依 A-L 小組列出隊伍（國旗 + 名稱）。</p>
+      </header>
+      <div class="groups-body">
+        <div class="groups-grid" id="groups-grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const matches =
+[{"round":"Matchday 1","date":"2026-06-11","time":"13:00 UTC-6","team1":"Mexico","team2":"South Africa","group":"Group A","ground":"Mexico City"},{"round":"Matchday 1","date":"2026-06-11","time":"20:00 UTC-6","team1":"South Korea","team2":"UEFA Path D winner","group":"Group A","ground":"Guadalajara (Zapopan)"},{"round":"Matchday 8","date":"2026-06-18","time":"12:00 UTC-4","team1":"UEFA Path D winner","team2":"South Africa","group":"Group A","ground":"Atlanta"},{"round":"Matchday 8","date":"2026-06-18","time":"19:00 UTC-6","team1":"Mexico","team2":"South Korea","group":"Group A","ground":"Guadalajara (Zapopan)"},{"round":"Matchday 14","date":"2026-06-24","time":"19:00 UTC-6","team1":"UEFA Path D winner","team2":"Mexico","group":"Group A","ground":"Mexico City"},{"round":"Matchday 14","date":"2026-06-24","time":"19:00 UTC-6","team1":"South Africa","team2":"South Korea","group":"Group A","ground":"Monterrey (Guadalupe)"},{"round":"Matchday 2","date":"2026-06-12","time":"15:00 UTC-4","team1":"Canada","team2":"UEFA Path A winner","group":"Group B","ground":"Toronto"},{"round":"Matchday 3","date":"2026-06-13","time":"12:00 UTC-7","team1":"Qatar","team2":"Switzerland","group":"Group B","ground":"San Francisco Bay Area (Santa Clara)"},{"round":"Matchday 8","date":"2026-06-18","time":"12:00 UTC-7","team1":"Switzerland","team2":"UEFA Path A winner","group":"Group B","ground":"Los Angeles (Inglewood)"},{"round":"Matchday 8","date":"2026-06-18","time":"15:00 UTC-7","team1":"Canada","team2":"Qatar","group":"Group B","ground":"Vancouver"},{"round":"Matchday 14","date":"2026-06-24","time":"12:00 UTC-7","team1":"Switzerland","team2":"Canada","group":"Group B","ground":"Vancouver"},{"round":"Matchday 14","date":"2026-06-24","time":"12:00 UTC-7","team1":"UEFA Path A winner","team2":"Qatar","group":"Group B","ground":"Seattle"},{"round":"Matchday 3","date":"2026-06-13","time":"18:00 UTC-4","team1":"Brazil","team2":"Morocco","group":"Group C","ground":"New York/New Jersey (East Rutherford)"},{"round":"Matchday 3","date":"2026-06-13","time":"21:00 UTC-4","team1":"Haiti","team2":"Scotland","group":"Group C","ground":"Boston (Foxborough)"},{"round":"Matchday 9","date":"2026-06-19","time":"18:00 UTC-4","team1":"Scotland","team2":"Morocco","group":"Group C","ground":"Boston (Foxborough)"},{"round":"Matchday 9","date":"2026-06-19","time":"21:00 UTC-4","team1":"Brazil","team2":"Haiti","group":"Group C","ground":"Philadelphia"},{"round":"Matchday 14","date":"2026-06-24","time":"18:00 UTC-4","team1":"Scotland","team2":"Brazil","group":"Group C","ground":"Miami (Miami Gardens)"},{"round":"Matchday 14","date":"2026-06-24","time":"18:00 UTC-4","team1":"Morocco","team2":"Haiti","group":"Group C","ground":"Atlanta"},{"round":"Matchday 2","date":"2026-06-12","time":"18:00 UTC-7","team1":"USA","team2":"Paraguay","group":"Group D","ground":"Los Angeles (Inglewood)"},{"round":"Matchday 3","date":"2026-06-13","time":"21:00 UTC-7","team1":"Australia","team2":"UEFA Path C winner","group":"Group D","ground":"Vancouver"},{"round":"Matchday 9","date":"2026-06-19","time":"12:00 UTC-7","team1":"USA","team2":"Australia","group":"Group D","ground":"Seattle"},{"round":"Matchday 9","date":"2026-06-19","time":"21:00 UTC-7","team1":"UEFA Path C winner","team2":"Paraguay","group":"Group D","ground":"San Francisco Bay Area (Santa Clara)"},{"round":"Matchday 15","date":"2026-06-25","time":"19:00 UTC-7","team1":"UEFA Path C winner","team2":"USA","group":"Group D","ground":"Los Angeles (Inglewood)"},{"round":"Matchday 15","date":"2026-06-25","time":"19:00 UTC-7","team1":"Paraguay","team2":"Australia","group":"Group D","ground":"San Francisco Bay Area (Santa Clara)"},{"round":"Matchday 4","date":"2026-06-14","time":"12:00 UTC-5","team1":"Germany","team2":"Curaçao","group":"Group E","ground":"Houston"},{"round":"Matchday 4","date":"2026-06-14","time":"19:00 UTC-4","team1":"Ivory Coast","team2":"Ecuador","group":"Group E","ground":"Philadelphia"},{"round":"Matchday 10","date":"2026-06-20","time":"16:00 UTC-4","team1":"Germany","team2":"Ivory Coast","group":"Group E","ground":"Toronto"},{"round":"Matchday 10","date":"2026-06-20","time":"19:00 UTC-5","team1":"Ecuador","team2":"Curaçao","group":"Group E","ground":"Kansas City"},{"round":"Matchday 15","date":"2026-06-25","time":"16:00 UTC-4","team1":"Curaçao","team2":"Ivory Coast","group":"Group E","ground":"Philadelphia"},{"round":"Matchday 15","date":"2026-06-25","time":"16:00 UTC-4","team1":"Ecuador","team2":"Germany","group":"Group E","ground":"New York/New Jersey (East Rutherford)"},{"round":"Matchday 4","date":"2026-06-14","time":"15:00 UTC-5","team1":"Netherlands","team2":"Japan","group":"Group F","ground":"Dallas (Arlington)"},{"round":"Matchday 4","date":"2026-06-14","time":"20:00 UTC-6","team1":"UEFA Path B winner","team2":"Tunisia","group":"Group F","ground":"Monterrey (Guadalupe)"},{"round":"Matchday 10","date":"2026-06-20","time":"12:00 UTC-5","team1":"Netherlands","team2":"UEFA Path B winner","group":"Group F","ground":"Houston"},{"round":"Matchday 10","date":"2026-06-20","time":"22:00 UTC-6","team1":"Tunisia","team2":"Japan","group":"Group F","ground":"Monterrey (Guadalupe)"},{"round":"Matchday 15","date":"2026-06-25","time":"18:00 UTC-5","team1":"Japan","team2":"UEFA Path B winner","group":"Group F","ground":"Dallas (Arlington)"},{"round":"Matchday 15","date":"2026-06-25","time":"18:00 UTC-5","team1":"Tunisia","team2":"Netherlands","group":"Group F","ground":"Kansas City"},{"round":"Matchday 5","date":"2026-06-15","time":"12:00 UTC-7","team1":"Belgium","team2":"Egypt","group":"Group G","ground":"Seattle"},{"round":"Matchday 5","date":"2026-06-15","time":"18:00 UTC-7","team1":"Iran","team2":"New Zealand","group":"Group G","ground":"Los Angeles (Inglewood)"},{"round":"Matchday 11","date":"2026-06-21","time":"12:00 UTC-7","team1":"Belgium","team2":"Iran","group":"Group G","ground":"Los Angeles (Inglewood)"},{"round":"Matchday 11","date":"2026-06-21","time":"18:00 UTC-7","team1":"New Zealand","team2":"Egypt","group":"Group G","ground":"Vancouver"},{"round":"Matchday 16","date":"2026-06-26","time":"20:00 UTC-7","team1":"Egypt","team2":"Iran","group":"Group G","ground":"Seattle"},{"round":"Matchday 16","date":"2026-06-26","time":"20:00 UTC-7","team1":"New Zealand","team2":"Belgium","group":"Group G","ground":"Vancouver"},{"round":"Matchday 5","date":"2026-06-15","time":"12:00 UTC-4","team1":"Spain","team2":"Cape Verde","group":"Group H","ground":"Atlanta"},{"round":"Matchday 5","date":"2026-06-15","time":"18:00 UTC-4","team1":"Saudi Arabia","team2":"Uruguay","group":"Group H","ground":"Miami (Miami Gardens)"},{"round":"Matchday 11","date":"2026-06-21","time":"12:00 UTC-4","team1":"Spain","team2":"Saudi Arabia","group":"Group H","ground":"Atlanta"},{"round":"Matchday 11","date":"2026-06-21","time":"18:00 UTC-4","team1":"Uruguay","team2":"Cape Verde","group":"Group H","ground":"Miami (Miami Gardens)"},{"round":"Matchday 16","date":"2026-06-26","time":"19:00 UTC-5","team1":"Cape Verde","team2":"Saudi Arabia","group":"Group H","ground":"Houston"},{"round":"Matchday 16","date":"2026-06-26","time":"18:00 UTC-6","team1":"Uruguay","team2":"Spain","group":"Group H","ground":"Guadalajara (Zapopan)"},{"round":"Matchday 6","date":"2026-06-16","time":"15:00 UTC-4","team1":"France","team2":"Senegal","group":"Group I","ground":"New York/New Jersey (East Rutherford)"},{"round":"Matchday 6","date":"2026-06-16","time":"18:00 UTC-4","team1":"IC Path 2 winner","team2":"Norway","group":"Group I","ground":"Boston (Foxborough)"},{"round":"Matchday 12","date":"2026-06-22","time":"17:00 UTC-4","team1":"France","team2":"IC Path 2 winner","group":"Group I","ground":"Philadelphia"},{"round":"Matchday 12","date":"2026-06-22","time":"20:00 UTC-4","team1":"Norway","team2":"Senegal","group":"Group I","ground":"New York/New Jersey (East Rutherford)"},{"round":"Matchday 16","date":"2026-06-26","time":"15:00 UTC-4","team1":"Norway","team2":"France","group":"Group I","ground":"Boston (Foxborough)"},{"round":"Matchday 16","date":"2026-06-26","time":"15:00 UTC-4","team1":"Senegal","team2":"IC Path 2 winner","group":"Group I","ground":"Toronto"},{"round":"Matchday 6","date":"2026-06-16","time":"20:00 UTC-5","team1":"Argentina","team2":"Algeria","group":"Group J","ground":"Kansas City"},{"round":"Matchday 6","date":"2026-06-16","time":"21:00 UTC-7","team1":"Austria","team2":"Jordan","group":"Group J","ground":"San Francisco Bay Area (Santa Clara)"},{"round":"Matchday 12","date":"2026-06-22","time":"12:00 UTC-5","team1":"Argentina","team2":"Austria","group":"Group J","ground":"Dallas (Arlington)"},{"round":"Matchday 12","date":"2026-06-22","time":"20:00 UTC-7","team1":"Jordan","team2":"Algeria","group":"Group J","ground":"San Francisco Bay Area (Santa Clara)"},{"round":"Matchday 17","date":"2026-06-27","time":"21:00 UTC-5","team1":"Algeria","team2":"Austria","group":"Group J","ground":"Kansas City"},{"round":"Matchday 17","date":"2026-06-27","time":"21:00 UTC-5","team1":"Jordan","team2":"Argentina","group":"Group J","ground":"Dallas (Arlington)"},{"round":"Matchday 7","date":"2026-06-17","time":"12:00 UTC-5","team1":"Portugal","team2":"IC Path 1 winner","group":"Group K","ground":"Houston"},{"round":"Matchday 7","date":"2026-06-17","time":"20:00 UTC-6","team1":"Uzbekistan","team2":"Colombia","group":"Group K","ground":"Mexico City"},{"round":"Matchday 13","date":"2026-06-23","time":"12:00 UTC-5","team1":"Portugal","team2":"Uzbekistan","group":"Group K","ground":"Houston"},{"round":"Matchday 13","date":"2026-06-23","time":"20:00 UTC-6","team1":"Colombia","team2":"IC Path 1 winner","group":"Group K","ground":"Guadalajara (Zapopan)"},{"round":"Matchday 17","date":"2026-06-27","time":"19:30 UTC-4","team1":"Colombia","team2":"Portugal","group":"Group K","ground":"Miami (Miami Gardens)"},{"round":"Matchday 17","date":"2026-06-27","time":"19:30 UTC-4","team1":"IC Path 1 winner","team2":"Uzbekistan","group":"Group K","ground":"Atlanta"},{"round":"Matchday 7","date":"2026-06-17","time":"15:00 UTC-5","team1":"England","team2":"Croatia","group":"Group L","ground":"Dallas (Arlington)"},{"round":"Matchday 7","date":"2026-06-17","time":"19:00 UTC-4","team1":"Ghana","team2":"Panama","group":"Group L","ground":"Toronto"},{"round":"Matchday 13","date":"2026-06-23","time":"16:00 UTC-4","team1":"England","team2":"Ghana","group":"Group L","ground":"Boston (Foxborough)"},{"round":"Matchday 13","date":"2026-06-23","time":"19:00 UTC-4","team1":"Panama","team2":"Croatia","group":"Group L","ground":"Toronto"},{"round":"Matchday 17","date":"2026-06-27","time":"17:00 UTC-4","team1":"Panama","team2":"England","group":"Group L","ground":"New York/New Jersey (East Rutherford)"},{"round":"Matchday 17","date":"2026-06-27","time":"17:00 UTC-4","team1":"Croatia","team2":"Ghana","group":"Group L","ground":"Philadelphia"},{"round":"Round of 32","num":73,"date":"2026-06-28","time":"12:00 UTC-7","team1":"2A","team2":"2B","ground":"Los Angeles (Inglewood)"},{"round":"Round of 32","num":74,"date":"2026-06-29","time":"16:30 UTC-4","team1":"1E","team2":"3A/B/C/D/F","ground":"Boston (Foxborough)"},{"round":"Round of 32","num":75,"date":"2026-06-29","time":"19:00 UTC-6","team1":"1F","team2":"2C","ground":"Monterrey (Guadalupe)"},{"round":"Round of 32","num":76,"date":"2026-06-29","time":"12:00 UTC-5","team1":"1C","team2":"2F","ground":"Houston"},{"round":"Round of 32","num":77,"date":"2026-06-30","time":"17:00 UTC-4","team1":"1I","team2":"3C/D/F/G/H","ground":"New York/New Jersey (East Rutherford)"},{"round":"Round of 32","num":78,"date":"2026-06-30","time":"12:00 UTC-5","team1":"2E","team2":"2I","ground":"Dallas (Arlington)"},{"round":"Round of 32","num":79,"date":"2026-06-30","time":"19:00 UTC-6","team1":"1A","team2":"3C/E/F/H/I","ground":"Mexico City"},{"round":"Round of 32","num":80,"date":"2026-07-01","time":"12:00 UTC-4","team1":"1L","team2":"3E/H/I/J/K","ground":"Atlanta"},{"round":"Round of 32","num":81,"date":"2026-07-01","time":"17:00 UTC-7","team1":"1D","team2":"3B/E/F/I/J","ground":"San Francisco Bay Area (Santa Clara)"},{"round":"Round of 32","num":82,"date":"2026-07-01","time":"13:00 UTC-7","team1":"1G","team2":"3A/E/H/I/J","ground":"Seattle"},{"round":"Round of 32","num":83,"date":"2026-07-02","time":"19:00 UTC-4","team1":"2K","team2":"2L","ground":"Toronto"},{"round":"Round of 32","num":84,"date":"2026-07-02","time":"12:00 UTC-7","team1":"1H","team2":"2J","ground":"Los Angeles (Inglewood)"},{"round":"Round of 32","num":85,"date":"2026-07-02","time":"20:00 UTC-7","team1":"1B","team2":"3E/F/G/I/J","ground":"Vancouver"},{"round":"Round of 32","num":86,"date":"2026-07-03","time":"18:00 UTC-4","team1":"1J","team2":"2H","ground":"Miami (Miami Gardens)"},{"round":"Round of 32","num":87,"date":"2026-07-03","time":"20:30 UTC-5","team1":"1K","team2":"3D/E/I/J/L","ground":"Kansas City"},{"round":"Round of 32","num":88,"date":"2026-07-03","time":"13:00 UTC-5","team1":"2D","team2":"2G","ground":"Dallas (Arlington)"},{"round":"Round of 16","num":89,"date":"2026-07-04","time":"17:00 UTC-4","team1":"W74","team2":"W77","ground":"Philadelphia"},{"round":"Round of 16","num":90,"date":"2026-07-04","time":"12:00 UTC-5","team1":"W73","team2":"W75","ground":"Houston"},{"round":"Round of 16","num":91,"date":"2026-07-05","time":"16:00 UTC-4","team1":"W76","team2":"W78","ground":"New York/New Jersey (East Rutherford)"},{"round":"Round of 16","num":92,"date":"2026-07-05","time":"18:00 UTC-6","team1":"W79","team2":"W80","ground":"Mexico City"},{"round":"Round of 16","num":93,"date":"2026-07-06","time":"14:00 UTC-5","team1":"W83","team2":"W84","ground":"Dallas (Arlington)"},{"round":"Round of 16","num":94,"date":"2026-07-06","time":"17:00 UTC-7","team1":"W81","team2":"W82","ground":"Seattle"},{"round":"Round of 16","num":95,"date":"2026-07-07","time":"12:00 UTC-4","team1":"W86","team2":"W88","ground":"Atlanta"},{"round":"Round of 16","num":96,"date":"2026-07-07","time":"13:00 UTC-7","team1":"W85","team2":"W87","ground":"Vancouver"},{"round":"Quarter-final","num":97,"date":"2026-07-09","time":"16:00 UTC-4","team1":"W89","team2":"W90","ground":"Boston (Foxborough)"},{"round":"Quarter-final","num":98,"date":"2026-07-10","time":"12:00 UTC-7","team1":"W93","team2":"W94","ground":"Los Angeles (Inglewood)"},{"round":"Quarter-final","num":99,"date":"2026-07-11","time":"17:00 UTC-4","team1":"W91","team2":"W92","ground":"Miami (Miami Gardens)"},{"round":"Quarter-final","num":100,"date":"2026-07-11","time":"20:00 UTC-5","team1":"W95","team2":"W96","ground":"Kansas City"},{"round":"Semi-final","num":101,"date":"2026-07-14","time":"14:00 UTC-5","team1":"W97","team2":"W98","ground":"Dallas (Arlington)"},{"round":"Semi-final","num":102,"date":"2026-07-15","time":"15:00 UTC-4","team1":"W99","team2":"W100","ground":"Atlanta"},{"round":"Match for third place","date":"2026-07-18","time":"17:00 UTC-4","team1":"L101","team2":"L102","ground":"Miami (Miami Gardens)"},{"round":"Final","date":"2026-07-19","time":"15:00 UTC-4","team1":"W101","team2":"W102","ground":"New York/New Jersey (East Rutherford)"}]
+;
+    const teamsMeta =
+[{"name":"Mexico","continent":"North America","flag_icon":"🇲🇽","flag_unicode":"\\u{1F1F2}\\u{1F1FD}","fifa_code":"MEX","assoc":{"key":"mex","name":"Federación Mexicana de Fútbol Asociación","continental":{"name":"Confederation of North, Central American and Caribbean Association Football (CONCACAF)","code":"CONCACAF"}},"group":"A"},{"name":"South Africa","continent":"Africa","flag_icon":"🇿🇦","flag_unicode":"\\u{1F1FF}\\u{1F1E6}","fifa_code":"RSA","assoc":null,"group":"A"},{"name":"South Korea","name_normalised":"Korea Republic","continent":"Asia","flag_icon":"🇰🇷","flag_unicode":"\\u{1F1F0}\\u{1F1F7}","fifa_code":"KOR","assoc":{"key":"kor","name":"Korea Football Association","continental":{"name":"Asian Football Confederation (AFC)","code":"AFC"}},"group":"A"},{"name":"UEFA Path D winner","continent":"Europe","flag_icon":null,"flag_unicode":null,"fifa_code":null,"assoc":null,"group":"A"},{"name":"Canada","continent":"North America","flag_icon":"🇨🇦","flag_unicode":"\\u{1F1E8}\\u{1F1E6}","fifa_code":"CAN","assoc":null,"group":"B"},{"name":"UEFA Path A winner","continent":"Europe","flag_icon":null,"flag_unicode":null,"fifa_code":null,"assoc":null,"group":"B"},{"name":"Qatar","continent":"Asia","flag_icon":"🇶🇦","flag_unicode":"\\u{1F1F6}\\u{1F1E6}","fifa_code":"QAT","assoc":null,"group":"B"},{"name":"Switzerland","continent":"Europe","flag_icon":"🇨🇭","flag_unicode":"\\u{1F1E8}\\u{1F1ED}","fifa_code":"SUI","assoc":{"key":"sui","name":"Association Suisse de Football","continental":{"name":"Union of European Football Associations (UEFA)","code":"UEFA"}},"group":"B"},{"name":"Brazil","continent":"South America","flag_icon":"🇧🇷","flag_unicode":"\\u{1F1E7}\\u{1F1F7}","fifa_code":"BRA","assoc":{"key":"bra","name":"Confederação Brasileira de Futebol","continental":{"name":"Confederación Sudamericana de Fútbol (CONMEBOL)","code":"CONMEBOL"}},"group":"C"},{"name":"Morocco","continent":"Africa","flag_icon":"🇲🇦","flag_unicode":"\\u{1F1F2}\\u{1F1E6}","fifa_code":"MAR","assoc":{"key":"mar","name":"Fédération Royale Marocaine de Football","continental":{"name":"Confédération Africaine de Football (CAF)","code":"CAF"}},"group":"C"},{"name":"Haiti","continent":"North America","flag_icon":"🇭🇹","flag_unicode":"\\u{1F1ED}\\u{1F1F9}","fifa_code":"HAI","assoc":null,"group":"C"},{"name":"Scotland","continent":"Europe","flag_icon":"🏴","flag_unicode":null,"fifa_code":"SCO","assoc":null,"group":"C"},{"name":"USA","name_normalised":"United States","continent":"North America","flag_icon":"🇺🇸","flag_unicode":"\\u{1F1FA}\\u{1F1F8}","fifa_code":"USA","assoc":{"key":"usa","name":"United States Soccer Federation","continental":{"name":"Confederation of North, Central American and Caribbean Association Football (CONCACAF)","code":"CONCACAF"}},"group":"D"},{"name":"Paraguay","continent":"South America","flag_icon":"🇵🇾","flag_unicode":"\\u{1F1F5}\\u{1F1FE}","fifa_code":"PAR","assoc":null,"group":"D"},{"name":"Australia","continent":"Oceania","flag_icon":"🇦🇺","flag_unicode":"\\u{1F1E6}\\u{1F1FA}","fifa_code":"AUS","assoc":{"key":"aus","name":"Football Federation Australia","continental":{"name":"Asian Football Confederation (AFC)","code":"AFC"}},"group":"D"},{"name":"UEFA Path C winner","continent":"Europe","flag_icon":null,"flag_unicode":null,"fifa_code":null,"assoc":null,"group":"D"},{"name":"Germany","continent":"Europe","flag_icon":"🇩🇪","flag_unicode":"\\u{1F1E9}\\u{1F1EA}","fifa_code":"GER","assoc":{"key":"ger","name":"Deutscher Fußball-Bund","continental":{"name":"Union of European Football Associations (UEFA)","code":"UEFA"}},"group":"E"},{"name":"Curaçao","continent":"North America","flag_icon":"🇨🇼","flag_unicode":"\\u{1F1E8}\\u{1F1FC}","fifa_code":"CUW","assoc":null,"group":"E"},{"name":"Ivory Coast","name_normalised":"Cote d'Ivoire","continent":"Africa","flag_icon":"🇨🇮","flag_unicode":"\\u{1F1E8}\\u{1F1EE}","fifa_code":"CIV","assoc":{"key":"civ","name":"Fédération Ivoirienne de Football","continental":{"name":"Confédération Africaine de Football (CAF)","code":"CAF"}},"group":"E"},{"name":"Ecuador","continent":"South America","flag_icon":"🇪🇨","flag_unicode":"\\u{1F1EA}\\u{1F1E8}","fifa_code":"ECU","assoc":{"key":"ecu","name":"Federación Ecuatoriana de Fútbol","continental":{"name":"Confederación Sudamericana de Fútbol (CONMEBOL)","code":"CONMEBOL"}},"group":"E"},{"name":"Netherlands","continent":"Europe","flag_icon":"🇳🇱","flag_unicode":"\\u{1F1F3}\\u{1F1F1}","fifa_code":"NED","assoc":{"key":"bon","name":"Bonaire Football Federation","continental":{"name":"Confederation of North, Central American and Caribbean Association Football (CONCACAF)","code":"CONCACAF"}},"group":"F"},{"name":"Japan","continent":"Asia","flag_icon":"🇯🇵","flag_unicode":"\\u{1F1EF}\\u{1F1F5}","fifa_code":"JPN","assoc":{"key":"jpn","name":"Japan Football Association","continental":{"name":"Asian Football Confederation (AFC)","code":"AFC"}},"group":"F"},{"name":"UEFA Path B winner","continent":"Europe","flag_icon":null,"flag_unicode":null,"fifa_code":null,"assoc":null,"group":"F"},{"name":"Tunisia","continent":"Africa","flag_icon":"🇹🇳","flag_unicode":"\\u{1F1F9}\\u{1F1F3}","fifa_code":"TUN","assoc":{"key":"tun","name":"Fédération Tunisienne de Football","continental":{"name":"Confédération Africaine de Football (CAF)","code":"CAF"}},"group":"F"},{"name":"Belgium","continent":"Europe","flag_icon":"🇧🇪","flag_unicode":"\\u{1F1E7}\\u{1F1EA}","fifa_code":"BEL","assoc":{"key":"bel","name":"Koninklijke Belgische Voetbalbond","continental":{"name":"Union of European Football Associations (UEFA)","code":"UEFA"}},"group":"G"},{"name":"Egypt","continent":"Africa","flag_icon":"🇪🇬","flag_unicode":"\\u{1F1EA}\\u{1F1EC}","fifa_code":"EGY","assoc":{"key":"egy","name":"Egyptian Football Association","continental":{"name":"Confédération Africaine de Football (CAF)","code":"CAF"}},"group":"G"},{"name":"Iran","name_normalised":"IR Iran","continent":"Asia","flag_icon":"🇮🇷","flag_unicode":"\\u{1F1EE}\\u{1F1F7}","fifa_code":"IRN","assoc":{"key":"irn","name":"Football Federation Islamic Republic of Iran","continental":{"name":"Asian Football Confederation (AFC)","code":"AFC"}},"group":"G"},{"name":"New Zealand","continent":"Oceania","flag_icon":"🇳🇿","flag_unicode":"\\u{1F1F3}\\u{1F1FF}","fifa_code":"NZL","assoc":null,"group":"G"},{"name":"Spain","continent":"Europe","flag_icon":"🇪🇸","flag_unicode":"\\u{1F1EA}\\u{1F1F8}","fifa_code":"ESP","assoc":{"key":"esp","name":"Real Federación Española de Fútbol","continental":{"name":"Union of European Football Associations (UEFA)","code":"UEFA"}},"group":"H"},{"name":"Cape Verde","name_normalised":"Cabo Verde","continent":"Africa","flag_icon":"🇨🇻","flag_unicode":"\\u{1F1E8}\\u{1F1FB}","fifa_code":"CPV","assoc":null,"group":"H"},{"name":"Saudi Arabia","continent":"Asia","flag_icon":"🇸🇦","flag_unicode":"\\u{1F1F8}\\u{1F1E6}","fifa_code":"KSA","assoc":{"key":"ksa","name":"Saudi Arabian Football Federation","continental":{"name":"Asian Football Confederation (AFC)","code":"AFC"}},"group":"H"},{"name":"Uruguay","continent":"South America","flag_icon":"🇺🇾","flag_unicode":"\\u{1F1FA}\\u{1F1FE}","fifa_code":"URU","assoc":{"key":"uru","name":"Asociación Uruguaya de Fútbol","continental":{"name":"Confederación Sudamericana de Fútbol (CONMEBOL)","code":"CONMEBOL"}},"group":"H"},{"name":"France","continent":"Europe","flag_icon":"🇫🇷","flag_unicode":"\\u{1F1EB}\\u{1F1F7}","fifa_code":"FRA","assoc":{"key":"fra","name":"Fédération Française de Football","continental":{"name":"Union of European Football Associations (UEFA)","code":"UEFA"}},"group":"I"},{"name":"Senegal","continent":"Africa","flag_icon":"🇸🇳","flag_unicode":"\\u{1F1F8}\\u{1F1F3}","fifa_code":"SEN","assoc":{"key":"sen","name":"Fédération Sénégalaise de Football","continental":{"name":"Confédération Africaine de Football (CAF)","code":"CAF"}},"group":"I"},{"name":"IC Path 2 winner","continent":"TBD","flag_icon":null,"flag_unicode":null,"fifa_code":null,"assoc":null,"group":"I"},{"name":"Norway","continent":"Europe","flag_icon":"🇳🇴","flag_unicode":"\\u{1F1F3}\\u{1F1F4}","fifa_code":"NOR","assoc":null,"group":"I"},{"name":"Argentina","continent":"South America","flag_icon":"🇦🇷","flag_unicode":"\\u{1F1E6}\\u{1F1F7}","fifa_code":"ARG","assoc":{"key":"arg","name":"Asociación del Fútbol Argentino","continental":{"name":"Confederación Sudamericana de Fútbol (CONMEBOL)","code":"CONMEBOL"}},"group":"J"},{"name":"Algeria","continent":"Africa","flag_icon":"🇩🇿","flag_unicode":"\\u{1F1E9}\\u{1F1FF}","fifa_code":"ALG","assoc":{"key":"alg","name":"Fédération Algérienne de Football","continental":{"name":"Confédération Africaine de Football (CAF)","code":"CAF"}},"group":"J"},{"name":"Austria","continent":"Europe","flag_icon":"🇦🇹","flag_unicode":"\\u{1F1E6}\\u{1F1F9}","fifa_code":"AUT","assoc":null,"group":"J"},{"name":"Jordan","continent":"Asia","flag_icon":"🇯🇴","flag_unicode":"\\u{1F1EF}\\u{1F1F4}","fifa_code":"JOR","assoc":null,"group":"J"},{"name":"Portugal","continent":"Europe","flag_icon":"🇵🇹","flag_unicode":"\\u{1F1F5}\\u{1F1F9}","fifa_code":"POR","assoc":{"key":"por","name":"Federação Portuguesa de Futebol","continental":{"name":"Union of European Football Associations (UEFA)","code":"UEFA"}},"group":"K"},{"name":"IC Path 1 winner","continent":"TBD","flag_icon":null,"flag_unicode":null,"fifa_code":null,"assoc":null,"group":"K"},{"name":"Uzbekistan","continent":"Asia","flag_icon":"🇺🇿","flag_unicode":"\\u{1F1FA}\\u{1F1FF}","fifa_code":"UZB","assoc":null,"group":"K"},{"name":"Colombia","continent":"South America","flag_icon":"🇨🇴","flag_unicode":"\\u{1F1E8}\\u{1F1F4}","fifa_code":"COL","assoc":{"key":"col","name":"Federación Colombiana de Fútbol","continental":{"name":"Confederación Sudamericana de Fútbol (CONMEBOL)","code":"CONMEBOL"}},"group":"K"},{"name":"England","continent":"Europe","flag_icon":"🏴","flag_unicode":null,"fifa_code":"ENG","assoc":null,"group":"L"},{"name":"Croatia","continent":"Europe","flag_icon":"🇭🇷","flag_unicode":"\\u{1F1ED}\\u{1F1F7}","fifa_code":"CRO","assoc":{"key":"cro","name":"Hrvatski Nogometni Savez","continental":{"name":"Union of European Football Associations (UEFA)","code":"UEFA"}},"group":"L"},{"name":"Ghana","continent":"Africa","flag_icon":"🇬🇭","flag_unicode":"\\u{1F1EC}\\u{1F1ED}","fifa_code":"GHA","assoc":{"key":"gha","name":"Ghana Football Association","continental":{"name":"Confédération Africaine de Football (CAF)","code":"CAF"}},"group":"L"},{"name":"Panama","continent":"North America","flag_icon":"🇵🇦","flag_unicode":"\\u{1F1F5}\\u{1F1E6}","fifa_code":"PAN","assoc":{"key":"pan","name":"Federación Panameña de Fútbol","continental":{"name":"Confederation of North, Central American and Caribbean Association Football (CONCACAF)","code":"CONCACAF"}},"group":"L"}]
+;
+
+    const nearbyGrounds = new Set([
+      "New York/New Jersey (East Rutherford)",
+      "Philadelphia",
+      "Boston (Foxborough)"
+    ]);
+    const dallasGround = "Dallas (Arlington)";
+    const weekDays = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
+
+    const state = {
+      scope: "all",
+      country: "all",
+      advance: "none"
+    };
+
+    const roundsForPath = ["Round of 32", "Round of 16", "Quarter-final", "Semi-final", "Final"];
+
+    const knockoutByRound = {
+      "Round of 32": sorted(matches.filter((m) => m.round === "Round of 32")),
+      "Round of 16": sorted(matches.filter((m) => m.round === "Round of 16")),
+      "Quarter-final": sorted(matches.filter((m) => m.round === "Quarter-final")),
+      "Semi-final": sorted(matches.filter((m) => m.round === "Semi-final")),
+      "Final": sorted(matches.filter((m) => m.round === "Final")),
+      "Match for third place": sorted(matches.filter((m) => m.round === "Match for third place"))
+    };
+
+    function sorted(arr) {
+      return arr.slice().sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+    }
+
+    function matchKey(m) {
+      return `${m.date}|${m.time}|${m.round}|${m.team1}|${m.team2}|${m.ground}`;
+    }
+
+    const winnerTokenByMatch = buildWinnerTokenMap();
+
+    function buildWinnerTokenMap() {
+      const map = new Map();
+      knockoutByRound["Round of 32"].forEach((m, i) => map.set(matchKey(m), `W${73 + i}`));
+      knockoutByRound["Round of 16"].forEach((m, i) => map.set(matchKey(m), `W${89 + i}`));
+      knockoutByRound["Quarter-final"].forEach((m, i) => map.set(matchKey(m), `W${97 + i}`));
+      knockoutByRound["Semi-final"].forEach((m, i) => map.set(matchKey(m), `W${101 + i}`));
+      return map;
+    }
+
+    function classify(ground) {
+      if (nearbyGrounds.has(ground)) return "nearby";
+      if (ground === dallasGround) return "dallas";
+      return "far";
+    }
+
+    function badgeText(cls) {
+      if (cls === "nearby") return "NY 周邊";
+      if (cls === "dallas") return "Dallas";
+      return "遠程";
+    }
+
+    function scopeAllowed(match, scope) {
+      const cls = classify(match.ground);
+      if (scope === "all") return true;
+      if (scope === "ny") return cls === "nearby";
+      if (scope === "ny+dallas") return cls === "nearby" || cls === "dallas";
+      return true;
+    }
+
+    function looksLikePlaceholderTeam(name) {
+      if (!name) return true;
+      return /winner/i.test(name) || /^\d[A-L](\/[A-L0-9]+)*$/.test(name) || /^[WL]\d+$/.test(name) || /^L\d+$/.test(name) || /^W\d+$/.test(name);
+    }
+
+    function countryMeta(country) {
+      return teamsMeta.find((t) => t.name === country || t.name_normalised === country) || null;
+    }
+
+    function buildCountryOptions() {
+      const country = document.getElementById("country");
+      const realTeams = teamsMeta
+        .filter((t) => t.group && !looksLikePlaceholderTeam(t.name))
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      realTeams.forEach((t) => {
+        const opt = document.createElement("option");
+        opt.value = t.name;
+        opt.textContent = `${t.flag_icon || "🏳️"} ${t.name}`;
+        country.appendChild(opt);
+      });
+    }
+
+    function teamMatchesSelectedCountry(match, country) {
+      if (country === "all") return true;
+      return match.team1 === country || match.team2 === country;
+    }
+
+    function projectedPath(country, advance) {
+      if (country === "all" || advance === "none") return [];
+      const meta = countryMeta(country);
+      if (!meta || !meta.group) return [];
+
+      let token = `${advance}${meta.group}`;
+      const route = [];
+
+      for (const roundName of roundsForPath) {
+        const roundMatches = knockoutByRound[roundName] || [];
+        const found = roundMatches.find((m) => m.team1 === token || m.team2 === token);
+        if (!found) break;
+        route.push(found);
+        if (roundName === "Final") break;
+        token = winnerTokenByMatch.get(matchKey(found));
+        if (!token) break;
+      }
+
+      return route;
+    }
+
+    function toDateObj(s) {
+      return new Date(`${s}T00:00:00`);
+    }
+
+    function formatDate(d) {
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function getFiltered(pathMatches) {
+      const pathSet = new Set(pathMatches.map(matchKey));
+
+      return matches
+        .filter((m) => scopeAllowed(m, state.scope))
+        .filter((m) => {
+          if (state.country === "all") return true;
+          if (teamMatchesSelectedCountry(m, state.country)) return true;
+          if (state.advance !== "none" && pathSet.has(matchKey(m))) return true;
+          return false;
+        })
+        .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+    }
+
+    function renderMeta(filtered, pathMatches) {
+      const allDates = matches.map((m) => m.date).sort();
+      const dateMin = allDates[0];
+      const dateMax = allDates[allDates.length - 1];
+
+      const pathInfo = (state.country !== "all" && state.advance !== "none")
+        ? `；推演路線 ${pathMatches.length} 場`
+        : "";
+
+      document.getElementById("meta").textContent = `目前顯示 ${filtered.length} 場（全賽期 ${dateMin} ~ ${dateMax}，總場次 ${matches.length} 場）${pathInfo}`;
+    }
+
+    function renderCalendar(filtered) {
+      const grid = document.getElementById("calendar-grid");
+      grid.innerHTML = "";
+
+      const byDate = new Map();
+      filtered.forEach((m) => {
+        if (!byDate.has(m.date)) byDate.set(m.date, []);
+        byDate.get(m.date).push(m);
+      });
+
+      const allDates = matches.map((m) => m.date).sort();
+      const min = toDateObj(allDates[0]);
+      const max = toDateObj(allDates[allDates.length - 1]);
+
+      for (let d = new Date(min); d <= max; d.setDate(d.getDate() + 1)) {
+        const dateStr = formatDate(d);
+        const events = sorted(byDate.get(dateStr) || []);
+
+        const card = document.createElement("article");
+        card.className = "day";
+
+        const mini = events.slice(0, 2).map((m) => {
+          const cls = classify(m.ground);
+          return `<div class="mini"><div class="m-time">${m.time}</div><div class="m-match">${m.team1} vs ${m.team2}</div><div class="m-ground">${m.ground}</div><span class="badge ${cls}">${badgeText(cls)}</span></div>`;
+        }).join("");
+
+        const more = events.length > 2 ? `<div class="more">+ 還有 ${events.length - 2} 場</div>` : "";
+
+        card.innerHTML = `
+          <p class="dow">${weekDays[d.getDay()]}</p>
+          <p class="date">${dateStr}</p>
+          <p class="count">${events.length} 場</p>
+          ${events.length ? mini + more : '<div class="empty">無符合範圍場次</div>'}
+        `;
+
+        grid.appendChild(card);
+      }
+    }
+
+    function renderFullBracket() {
+      const rounds = [
+        "Round of 32",
+        "Round of 16",
+        "Quarter-final",
+        "Semi-final",
+        "Final",
+        "Match for third place"
+      ];
+
+      const bracket = document.getElementById("bracket");
+      bracket.className = "bracket full";
+      bracket.innerHTML = "";
+
+      rounds.forEach((roundName) => {
+        const col = document.createElement("section");
+        col.className = "round-col";
+
+        const roundMatches = knockoutByRound[roundName] || [];
+        const cards = roundMatches.map((m) => {
+          return `<article class="match-card"><div class="mc-time">${m.date} | ${m.time}</div><div class="mc-teams">${m.team1} vs ${m.team2}</div><div class="mc-ground">${m.ground}</div></article>`;
+        }).join("");
+
+        col.innerHTML = `<h3 class="round-title">${roundName}（${roundMatches.length} 場）</h3>${cards || '<div class="empty">無場次</div>'}`;
+        bracket.appendChild(col);
+      });
+
+      document.getElementById("bracket-title").textContent = "32 強到冠軍賽對戰圖";
+      document.getElementById("bracket-subtitle").textContent = "顯示：32 強 → 16 強 → 8 強 → 4 強 → 冠軍賽（含季軍賽）。";
+    }
+
+    function renderPathBracket(pathMatches) {
+      const bracket = document.getElementById("bracket");
+      bracket.className = "bracket";
+      bracket.innerHTML = "";
+
+      roundsForPath.forEach((roundName) => {
+        const col = document.createElement("section");
+        col.className = "round-col";
+        const m = pathMatches.find((x) => x.round === roundName);
+        col.innerHTML = `<h3 class="round-title">${roundName}</h3>${m ? `<article class="match-card"><div class="mc-time">${m.date} | ${m.time}</div><div class="mc-teams">${m.team1} vs ${m.team2}</div><div class="mc-ground">${m.ground}</div></article>` : '<div class="empty">此路線無對應場次</div>'}`;
+        bracket.appendChild(col);
+      });
+
+      const groupLabel = state.advance === "1" ? "小組第一" : "小組第二";
+      document.getElementById("bracket-title").textContent = `${state.country}（${groupLabel}）晉級路線`;
+      document.getElementById("bracket-subtitle").textContent = "只顯示該隊從 32 強到冠軍賽可能路線。";
+    }
+
+    function renderGroups() {
+      const grid = document.getElementById("groups-grid");
+      grid.innerHTML = "";
+
+      const groups = {};
+      teamsMeta.forEach((t) => {
+        if (!t.group) return;
+        if (!groups[t.group]) groups[t.group] = [];
+        groups[t.group].push(t);
+      });
+
+      Object.keys(groups).sort().forEach((group) => {
+        const card = document.createElement("section");
+        card.className = "group-card";
+
+        const rows = groups[group].map((t) => {
+          const flag = t.flag_icon || "🏳️";
+          return `<div class="team-row"><span class="flag">${flag}</span><span>${t.name}</span></div>`;
+        }).join("");
+
+        card.innerHTML = `<h3 class="group-title">Group ${group}</h3>${rows}`;
+        grid.appendChild(card);
+      });
+    }
+
+    function render() {
+      const pathMatches = projectedPath(state.country, state.advance);
+      const filtered = getFiltered(pathMatches);
+      renderMeta(filtered, pathMatches);
+      renderCalendar(filtered);
+
+      if (state.country !== "all" && state.advance !== "none") {
+        renderPathBracket(pathMatches);
+      } else {
+        renderFullBracket();
+      }
+    }
+
+    function syncAdvanceAvailability() {
+      const advance = document.getElementById("advance");
+      if (state.country === "all") {
+        state.advance = "none";
+        advance.value = "none";
+        advance.disabled = true;
+      } else {
+        advance.disabled = false;
+      }
+    }
+
+    buildCountryOptions();
+    renderGroups();
+
+    document.getElementById("scope").addEventListener("change", (e) => {
+      state.scope = e.target.value;
+      render();
+    });
+
+    document.getElementById("country").addEventListener("change", (e) => {
+      state.country = e.target.value;
+      syncAdvanceAvailability();
+      render();
+    });
+
+    document.getElementById("advance").addEventListener("change", (e) => {
+      state.advance = e.target.value;
+      render();
+    });
+
+    syncAdvanceAvailability();
+    render();
+  </script>
+</body>
+</html>
