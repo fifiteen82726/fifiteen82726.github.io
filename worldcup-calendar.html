@@ -375,10 +375,10 @@
   <main class="wrap">
     <section class="hero">
       <h1>2026 世界盃全賽程行事曆（全部場次）</h1>
-      <p>可用城市與國家篩選。若選了國家，可再指定「小組第一 / 第二晉級」，下方會只顯示該路線到冠軍賽。</p>
+      <p>可用 Location（NY 快捷 / 國家 / 城市）與國家篩選。若選了國家，可再指定「小組第一 / 第二晉級」，下方會只顯示該路線到冠軍賽。</p>
       <div class="toolbar">
-        <label for="scope">顯示範圍</label>
-        <select id="scope" aria-label="顯示範圍">
+        <label for="scope">Location</label>
+        <select id="scope" aria-label="Location">
           <option value="all">全部場次</option>
           <option value="ny">只看 NY 周邊</option>
           <option value="ny+dallas">NY 周邊 + Dallas</option>
@@ -452,6 +452,31 @@
       advance: "none"
     };
 
+    const locationGroups = {
+      "USA": [
+        "Atlanta",
+        "Boston (Foxborough)",
+        "Dallas (Arlington)",
+        "Houston",
+        "Kansas City",
+        "Los Angeles (Inglewood)",
+        "Miami (Miami Gardens)",
+        "New York/New Jersey (East Rutherford)",
+        "Philadelphia",
+        "San Francisco Bay Area (Santa Clara)",
+        "Seattle"
+      ],
+      "Mexico": [
+        "Guadalajara (Zapopan)",
+        "Mexico City",
+        "Monterrey (Guadalupe)"
+      ],
+      "Canada": [
+        "Toronto",
+        "Vancouver"
+      ]
+    };
+
     const roundsForPath = ["Round of 32", "Round of 16", "Quarter-final", "Semi-final", "Final"];
 
     const knockoutByRound = {
@@ -475,10 +500,18 @@
 
     function buildWinnerTokenMap() {
       const map = new Map();
-      knockoutByRound["Round of 32"].forEach((m, i) => map.set(matchKey(m), `W${73 + i}`));
-      knockoutByRound["Round of 16"].forEach((m, i) => map.set(matchKey(m), `W${89 + i}`));
-      knockoutByRound["Quarter-final"].forEach((m, i) => map.set(matchKey(m), `W${97 + i}`));
-      knockoutByRound["Semi-final"].forEach((m, i) => map.set(matchKey(m), `W${101 + i}`));
+      // Use official knockout match numbers (num) to derive winner tokens.
+      // Sorting by kickoff time can misalign tokens like W86/W87.
+      [
+        ...knockoutByRound["Round of 32"],
+        ...knockoutByRound["Round of 16"],
+        ...knockoutByRound["Quarter-final"],
+        ...knockoutByRound["Semi-final"]
+      ].forEach((m) => {
+        if (typeof m.num === "number") {
+          map.set(matchKey(m), `W${m.num}`);
+        }
+      });
       return map;
     }
 
@@ -499,6 +532,15 @@
       if (scope === "all") return true;
       if (scope === "ny") return cls === "nearby";
       if (scope === "ny+dallas") return cls === "nearby" || cls === "dallas";
+      if (scope.startsWith("country:")) {
+        const country = scope.split(":")[1];
+        const cities = locationGroups[country] || [];
+        return cities.includes(match.ground);
+      }
+      if (scope.startsWith("city:")) {
+        const city = scope.slice(5);
+        return match.ground === city;
+      }
       return true;
     }
 
@@ -523,6 +565,47 @@
         opt.textContent = `${t.flag_icon || "🏳️"} ${t.name}`;
         country.appendChild(opt);
       });
+    }
+
+    function buildScopeLocationOptions() {
+      const scope = document.getElementById("scope");
+      const current = scope.value || "all";
+      scope.innerHTML = "";
+
+      const quick = [
+        ["all", "全部場次"],
+        ["ny", "只看 NY 周邊"],
+        ["ny+dallas", "NY 周邊 + Dallas"]
+      ];
+      quick.forEach(([v, t]) => {
+        const o = document.createElement("option");
+        o.value = v;
+        o.textContent = t;
+        scope.appendChild(o);
+      });
+
+      Object.entries(locationGroups).forEach(([country, cities]) => {
+        const og = document.createElement("optgroup");
+        og.label = country;
+
+        const countryOpt = document.createElement("option");
+        countryOpt.value = `country:${country}`;
+        countryOpt.textContent = `${country}（全部城市）`;
+        og.appendChild(countryOpt);
+
+        cities.forEach((city) => {
+          const opt = document.createElement("option");
+          opt.value = `city:${city}`;
+          opt.textContent = city;
+          og.appendChild(opt);
+        });
+
+        scope.appendChild(og);
+      });
+
+      const valid = Array.from(scope.querySelectorAll("option")).some((o) => o.value === current);
+      scope.value = valid ? current : "all";
+      state.scope = scope.value;
     }
 
     function teamMatchesSelectedCountry(match, country) {
@@ -743,6 +826,7 @@
     }
 
     buildCountryOptions();
+    buildScopeLocationOptions();
     renderGroups();
 
     document.getElementById("scope").addEventListener("change", (e) => {
