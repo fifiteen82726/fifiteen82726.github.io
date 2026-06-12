@@ -90,13 +90,48 @@
 
     .timezone-control {
       margin-left: auto;
+      display: grid;
+      gap: 6px;
+      min-width: min(100%, 390px);
+      max-width: 430px;
+    }
+
+    .timezone-title {
+      color: #fff;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .timezone-auto {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      color: #d7e2ee;
+      font-weight: 600;
+      line-height: 1.25;
+    }
+
+    .timezone-auto input {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      accent-color: #1d72d8;
     }
 
     .timezone-control select {
-      max-width: 270px;
+      width: 100%;
+      max-width: none;
+      border-color: #ccd5df;
+      border-radius: 8px;
+      background: #fff;
+      color: #1d2837;
+      padding: 9px 34px 9px 12px;
+    }
+
+    .timezone-control select:disabled {
+      background: #e8eef7;
+      color: #526276;
+      opacity: 0.8;
     }
 
     .meta {
@@ -397,13 +432,10 @@
       .timezone-control {
         width: 100%;
         margin-left: 0;
-        justify-content: space-between;
       }
 
       .timezone-control select {
-        flex: 1;
         min-width: 0;
-        max-width: none;
       }
 
       .groups-grid { grid-template-columns: 1fr; }
@@ -435,9 +467,13 @@
           <option value="2">小組第二晉級</option>
         </select>
 
-        <div class="timezone-control">
-          <label for="timezone">時區</label>
-          <select id="timezone" aria-label="時區"></select>
+        <div class="timezone-control" aria-label="Time zone settings">
+          <label class="timezone-title" for="timezone">Time zone</label>
+          <label class="timezone-auto" for="timezone-auto">
+            <input id="timezone-auto" type="checkbox">
+            <span>Set time zone automatically</span>
+          </label>
+          <select id="timezone" aria-label="Time zone"></select>
         </div>
       </div>
       <div class="meta" id="meta"></div>
@@ -490,23 +526,33 @@
     const dallasGround = "Dallas (Arlington)";
     const weekDaysMonFirst = ["週一", "週二", "週三", "週四", "週五", "週六", "週日"];
     const timezoneStorageKey = "worldcupTimezone";
+    const timezoneAutoStorageKey = "worldcupTimezoneAuto";
+    const timezoneLabelReferenceMs = Date.UTC(2026, 5, 16, 19, 0);
+    const commonTimeZones = [
+      ["America/New_York", "Eastern Time (US and Canada)"],
+      ["Asia/Taipei", "Taipei"]
+    ];
     const preferredTimeZones = [
-      ["Asia/Taipei", "台灣"],
-      ["America/New_York", "美東 / Miami"],
-      ["America/Chicago", "美中 / Dallas"],
-      ["America/Denver", "美山區"],
-      ["America/Los_Angeles", "美西"],
+      ...commonTimeZones,
+      ["America/Chicago", "Central Time (US and Canada)"],
+      ["America/Denver", "Mountain Time (US and Canada)"],
+      ["America/Los_Angeles", "Pacific Time (US and Canada)"],
       ["America/Toronto", "Toronto"],
       ["America/Vancouver", "Vancouver"],
       ["America/Mexico_City", "Mexico City"],
+      ["Europe/London", "Dublin, Edinburgh, Lisbon, London"],
+      ["Europe/Berlin", "Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna"],
+      ["Europe/Paris", "Brussels, Copenhagen, Madrid, Paris"],
       ["UTC", "UTC"]
     ];
+    const timezoneDisplayNames = new Map(preferredTimeZones);
 
     const state = {
       scope: "all",
       country: "all",
       advance: "none",
       timezone: "UTC",
+      timezoneAuto: true,
       expandedDayKeys: new Set()
     };
 
@@ -581,6 +627,14 @@
       }
     }
 
+    function storedTimeZoneAuto() {
+      try {
+        return localStorage.getItem(timezoneAutoStorageKey);
+      } catch (error) {
+        return null;
+      }
+    }
+
     function saveTimeZone(timezone) {
       try {
         localStorage.setItem(timezoneStorageKey, timezone);
@@ -589,14 +643,31 @@
       }
     }
 
-    function detectedTimeZone() {
-      const saved = storedTimeZone();
-      if (isValidTimeZone(saved)) return saved;
+    function saveTimeZoneAuto(enabled) {
+      try {
+        localStorage.setItem(timezoneAutoStorageKey, enabled ? "true" : "false");
+      } catch (error) {
+        // Browsers can block storage for local files or private sessions.
+      }
+    }
 
+    function browserDetectedTimeZone() {
       const resolved = Intl.DateTimeFormat().resolvedOptions().timeZone;
       if (isValidTimeZone(resolved)) return resolved;
 
       return "UTC";
+    }
+
+    function initialTimeZoneSettings() {
+      const saved = storedTimeZone();
+      const savedAuto = storedTimeZoneAuto();
+      const detected = browserDetectedTimeZone();
+      const timezoneAuto = savedAuto === "true" || (savedAuto !== "false" && !isValidTimeZone(saved));
+
+      return {
+        timezoneAuto,
+        timezone: timezoneAuto ? detected : (isValidTimeZone(saved) ? saved : detected)
+      };
     }
 
     function supportedTimeZones() {
@@ -607,10 +678,52 @@
       return preferredTimeZones.map(([timezone]) => timezone);
     }
 
-    function timezoneLabel(timezone) {
-      const preferred = preferredTimeZones.find(([value]) => value === timezone);
-      if (preferred) return `${preferred[1]} (${timezone})`;
-      return timezone.replace(/_/g, " ");
+    function timeZoneOffsetMinutes(timezone, referenceMs = timezoneLabelReferenceMs) {
+      if (timezone === "UTC") return 0;
+
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: timezone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hourCycle: "h23"
+      }).formatToParts(new Date(referenceMs));
+      const part = (type) => parts.find((p) => p.type === type)?.value || "0";
+      const localAsUtc = Date.UTC(
+        Number(part("year")),
+        Number(part("month")) - 1,
+        Number(part("day")),
+        Number(part("hour")),
+        Number(part("minute")),
+        Number(part("second"))
+      );
+
+      return Math.round((localAsUtc - referenceMs) / 60000);
+    }
+
+    function timeZoneOffsetLabel(timezone) {
+      const offset = timeZoneOffsetMinutes(timezone);
+      if (offset === 0) return "(UTC)";
+
+      const sign = offset > 0 ? "+" : "-";
+      const abs = Math.abs(offset);
+      const hours = String(Math.floor(abs / 60)).padStart(2, "0");
+      const minutes = String(abs % 60).padStart(2, "0");
+      return `(UTC${sign}${hours}:${minutes})`;
+    }
+
+    function fallbackTimeZoneName(timezone) {
+      if (timezone === "UTC") return "UTC";
+      const city = timezone.split("/").pop() || timezone;
+      return city.replace(/_/g, " ");
+    }
+
+    function formatTimeZoneOptionLabel(timezone) {
+      const name = timezoneDisplayNames.get(timezone) || fallbackTimeZoneName(timezone);
+      return `${timeZoneOffsetLabel(timezone)} ${name}`;
     }
 
     function parseMatchDateTime(match) {
@@ -876,42 +989,83 @@
     function appendTimezoneOption(parent, timezone) {
       const opt = document.createElement("option");
       opt.value = timezone;
-      opt.textContent = timezoneLabel(timezone);
+      opt.textContent = formatTimeZoneOptionLabel(timezone);
+      opt.title = timezone;
+      opt.dataset.offset = String(timeZoneOffsetMinutes(timezone));
       parent.appendChild(opt);
+    }
+
+    function sortedTimeZones(timezones) {
+      return timezones
+        .filter(isValidTimeZone)
+        .slice()
+        .sort((a, b) => {
+          const offsetDiff = timeZoneOffsetMinutes(a) - timeZoneOffsetMinutes(b);
+          if (offsetDiff !== 0) return offsetDiff;
+          return formatTimeZoneOptionLabel(a).localeCompare(formatTimeZoneOptionLabel(b));
+        });
+    }
+
+    function appendTimezoneGroup(parent, label, zones, added) {
+      const group = document.createElement("optgroup");
+      group.label = label;
+
+      zones.forEach((value) => {
+        if (!isValidTimeZone(value) || added.has(value)) return;
+        appendTimezoneOption(group, value);
+        added.add(value);
+      });
+
+      if (group.children.length) parent.appendChild(group);
+    }
+
+    function syncTimezoneControls() {
+      const timezone = document.getElementById("timezone");
+      const auto = document.getElementById("timezone-auto");
+      timezone.value = state.timezone;
+      timezone.disabled = state.timezoneAuto;
+      auto.checked = state.timezoneAuto;
     }
 
     function buildTimezoneOptions() {
       const timezone = document.getElementById("timezone");
-      const allZones = supportedTimeZones().filter(isValidTimeZone);
-      const selected = detectedTimeZone();
+      const settings = initialTimeZoneSettings();
       const added = new Set();
 
+      state.timezone = settings.timezone;
+      state.timezoneAuto = settings.timezoneAuto;
       timezone.innerHTML = "";
+
+      const allZones = sortedTimeZones([
+        ...preferredTimeZones.map(([value]) => value),
+        browserDetectedTimeZone(),
+        state.timezone,
+        ...supportedTimeZones()
+      ]);
 
       const common = document.createElement("optgroup");
       common.label = "常用時區";
-      [...preferredTimeZones.map(([value]) => value), selected].forEach((value) => {
+      commonTimeZones.forEach(([value]) => {
         if (!isValidTimeZone(value) || added.has(value)) return;
         appendTimezoneOption(common, value);
         added.add(value);
       });
       timezone.appendChild(common);
 
-      const all = document.createElement("optgroup");
-      all.label = "全部時區";
-      allZones.forEach((value) => {
-        if (added.has(value)) return;
-        appendTimezoneOption(all, value);
-        added.add(value);
-      });
-      timezone.appendChild(all);
+      appendTimezoneGroup(timezone, "全部時區", allZones, added);
+      syncTimezoneControls();
+    }
 
-      if (!added.has(selected)) {
-        appendTimezoneOption(common, selected);
-      }
+    function setTimeZoneSelection(timezone, timezoneAuto) {
+      if (!isValidTimeZone(timezone)) return;
 
-      state.timezone = selected;
-      timezone.value = selected;
+      state.timezone = timezone;
+      state.timezoneAuto = timezoneAuto;
+      state.expandedDayKeys.clear();
+      saveTimeZone(timezone);
+      saveTimeZoneAuto(timezoneAuto);
+      syncTimezoneControls();
+      render();
     }
 
     function teamMatchesSelectedCountry(match, country) {
@@ -1151,11 +1305,13 @@
       render();
     });
 
+    document.getElementById("timezone-auto").addEventListener("change", (e) => {
+      const timezone = e.target.checked ? browserDetectedTimeZone() : document.getElementById("timezone").value;
+      setTimeZoneSelection(timezone, e.target.checked);
+    });
+
     document.getElementById("timezone").addEventListener("change", (e) => {
-      state.timezone = e.target.value;
-      state.expandedDayKeys.clear();
-      saveTimeZone(state.timezone);
-      render();
+      setTimeZoneSelection(e.target.value, false);
     });
 
     document.getElementById("calendar-grid").addEventListener("click", (e) => {

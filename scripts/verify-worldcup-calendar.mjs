@@ -64,9 +64,19 @@ for (const team of localTeams) {
 }
 
 assert(html.includes('id="timezone"'), "Calendar should include a timezone selector");
+assert(html.includes('id="timezone-auto"'), "Calendar should include an automatic timezone checkbox");
 assert(html.includes("more-toggle"), "Calendar should render match expansion toggle buttons");
 assert(html.includes("expandedDayKeys"), "Calendar should track expanded local-date groups");
 assert(html.includes("formatMatchInTimeZone"), "Calendar should format matches in the selected timezone");
+assert(html.includes("timezoneAutoStorageKey"), "Calendar should persist automatic timezone mode");
+assert(html.includes("formatTimeZoneOptionLabel"), "Timezone options should show UTC offsets and friendly names");
+assert(html.includes("timeZoneOffsetLabel"), "Timezone selector should compute UTC offset labels");
+assert(html.includes("commonTimeZones"), "Timezone selector should define a pinned common timezone list");
+assert(html.includes('common.label = "常用時區"'), "Timezone selector should render common timezones at the top");
+assert(
+  html.indexOf('["America/New_York", "Eastern Time (US and Canada)"]') < html.indexOf('["Asia/Taipei", "Taipei"]'),
+  "Common timezone order should put Eastern Time before Taipei"
+);
 assert(html.includes("installCountrySelectTypeahead"), "Country selector should support keyboard typeahead by English country name");
 assert(html.includes("data-search-label"), "Country options should expose English search labels for keyboard selection");
 assert(!html.includes('${t.flag_icon || "🏳️"} ${t.name}'), "Country option text should not start with flags because native select typeahead matches visible text");
