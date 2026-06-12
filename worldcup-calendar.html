@@ -740,6 +740,18 @@
       return teamsMeta.find((t) => t.name === country || t.name_normalised === country) || null;
     }
 
+    function normalizeSearchText(value) {
+      return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    }
+
+    function countryOptionText(team) {
+      const flag = team.flag_icon || "🏳️";
+      return `${team.name} ${flag}`;
+    }
+
     function buildCountryOptions() {
       const country = document.getElementById("country");
       const realTeams = teamsMeta
@@ -749,8 +761,74 @@
       realTeams.forEach((t) => {
         const opt = document.createElement("option");
         opt.value = t.name;
-        opt.textContent = `${t.flag_icon || "🏳️"} ${t.name}`;
+        opt.textContent = countryOptionText(t);
+        opt.setAttribute("data-search-label", normalizeSearchText(t.name_normalised || t.name));
         country.appendChild(opt);
+      });
+    }
+
+    function searchableCountryOptions(select) {
+      return Array.from(select.options).filter((option) => option.value !== "all" && option.dataset.searchLabel);
+    }
+
+    function findCountryOption(select, query, cycleFromCurrent = false) {
+      const options = searchableCountryOptions(select);
+      const normalizedQuery = normalizeSearchText(query);
+      if (!normalizedQuery || !options.length) return null;
+
+      if (cycleFromCurrent) {
+        const currentIndex = options.findIndex((option) => option.value === select.value);
+        const startIndex = currentIndex >= 0 ? currentIndex : -1;
+        for (let offset = 1; offset <= options.length; offset += 1) {
+          const option = options[(startIndex + offset) % options.length];
+          if (option.dataset.searchLabel.startsWith(normalizedQuery)) return option;
+        }
+      }
+
+      return options.find((option) => option.dataset.searchLabel.startsWith(normalizedQuery)) || null;
+    }
+
+    function setCountrySelection(value) {
+      const country = document.getElementById("country");
+      state.country = value;
+      if (country.value !== value) country.value = value;
+      syncAdvanceAvailability();
+      render();
+    }
+
+    function installCountrySelectTypeahead(select) {
+      let buffer = "";
+      let lastInputAt = 0;
+      const resetDelayMs = 900;
+
+      select.addEventListener("keydown", (event) => {
+        if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.key.length !== 1) return;
+
+        const key = normalizeSearchText(event.key);
+        if (!key.trim() && !buffer) return;
+
+        const now = Date.now();
+        const nextBuffer = now - lastInputAt > resetDelayMs ? key : `${buffer}${key}`;
+        const repeatedKey = nextBuffer.length > 1 && Array.from(nextBuffer).every((char) => char === key);
+        let match = repeatedKey ? findCountryOption(select, key, true) : findCountryOption(select, nextBuffer);
+        let activeBuffer = nextBuffer;
+
+        if (!match && nextBuffer !== key) {
+          match = findCountryOption(select, key);
+          activeBuffer = key;
+        }
+
+        if (!match) return;
+
+        event.preventDefault();
+        buffer = activeBuffer;
+        lastInputAt = now;
+        setCountrySelection(match.value);
+      });
+
+      select.addEventListener("blur", () => {
+        buffer = "";
+        lastInputAt = 0;
       });
     }
 
@@ -1056,6 +1134,7 @@
     buildCountryOptions();
     buildScopeLocationOptions();
     buildTimezoneOptions();
+    installCountrySelectTypeahead(document.getElementById("country"));
     renderGroups();
 
     document.getElementById("scope").addEventListener("change", (e) => {
@@ -1064,9 +1143,7 @@
     });
 
     document.getElementById("country").addEventListener("change", (e) => {
-      state.country = e.target.value;
-      syncAdvanceAvailability();
-      render();
+      setCountrySelection(e.target.value);
     });
 
     document.getElementById("advance").addEventListener("change", (e) => {

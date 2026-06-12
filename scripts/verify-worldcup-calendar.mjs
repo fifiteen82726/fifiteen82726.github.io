@@ -67,5 +67,8 @@ assert(html.includes('id="timezone"'), "Calendar should include a timezone selec
 assert(html.includes("more-toggle"), "Calendar should render match expansion toggle buttons");
 assert(html.includes("expandedDayKeys"), "Calendar should track expanded local-date groups");
 assert(html.includes("formatMatchInTimeZone"), "Calendar should format matches in the selected timezone");
+assert(html.includes("installCountrySelectTypeahead"), "Country selector should support keyboard typeahead by English country name");
+assert(html.includes("data-search-label"), "Country options should expose English search labels for keyboard selection");
+assert(!html.includes('${t.flag_icon || "🏳️"} ${t.name}'), "Country option text should not start with flags because native select typeahead matches visible text");
 
 console.log(`worldcup-calendar matches upstream ${upstream.name}: ${localMatches.length} matches, ${teamsMeta.length} teams`);
